@@ -1,12 +1,10 @@
-import 'package:file_uploader/core/storage/storage_service.dart';
-import 'package:file_uploader/core/theme/app_colors.dart';
-import 'package:file_uploader/core/utils/app_size_class.dart';
-import 'package:file_uploader/core/utils/settings_util.dart';
-import 'package:file_uploader/core/widgets/custom_button.dart';
-import 'package:file_uploader/core/widgets/custom_text.dart';
-import 'package:file_uploader/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'package:file_uploader/core/core.dart';
+import 'package:file_uploader/core/storage/storage_service.dart';
+import 'package:file_uploader/core/utils/settings_util.dart';
+import 'package:file_uploader/routes/app_routes.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -16,18 +14,18 @@ class ProfileScreen extends StatelessWidget {
     final colors = context.appColors;
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(getRadius(16)),
+      padding: EdgeInsets.all(getRadius(AppDimensions.paddingL)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildHeader(context, colors),
-          SizedBox(height: getHeight(32)),
+          SizedBox(height: getHeight(AppDimensions.spaceXXL)),
           _buildSettingsSection(context, colors),
-          SizedBox(height: getHeight(32)),
+          SizedBox(height: getHeight(AppDimensions.spaceXXL)),
           CustomButton(
-            text: 'logout'.tr,
+            text: AppStrings.logout.tr,
             icon: Icons.logout_rounded,
-            color: colors.error.withOpacity(0.1),
+            color: colors.error.withValues(alpha: 0.1),
             textColor: colors.error,
             onPressed: () async {
               await Get.find<StorageService>().clearAuth();
@@ -41,13 +39,13 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context, AppColorScheme colors) {
     return Container(
-      padding: EdgeInsets.all(getRadius(20)),
+      padding: EdgeInsets.all(getRadius(AppDimensions.paddingXL)),
       decoration: BoxDecoration(
         gradient: colors.primaryGradient,
-        borderRadius: BorderRadius.circular(getRadius(20)),
+        borderRadius: BorderRadius.circular(getRadius(AppDimensions.radiusXL)),
         boxShadow: [
           BoxShadow(
-            color: colors.primary.withOpacity(0.2),
+            color: colors.primary.withValues(alpha: 0.2),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -56,30 +54,30 @@ class ProfileScreen extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: getRadius(70),
-            height: getRadius(70),
+            width: getRadius(AppDimensions.avatarSize),
+            height: getRadius(AppDimensions.avatarSize),
             decoration: BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 3),
+              border: Border.all(color: Colors.white, width: AppDimensions.borderWidthExtraThick),
             ),
-            child: Icon(Icons.person, size: getRadius(40), color: colors.primary),
+            child: Icon(Icons.person, size: getRadius(AppDimensions.iconXL), color: colors.primary),
           ),
-          SizedBox(width: getWidth(16)),
+          SizedBox(width: getWidth(AppDimensions.spaceL)),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CustomText(
-                  text: "John Doe", 
-                  fontSize: 20, 
+                CustomText(
+                  text: 'John Doe',
+                  fontSize: AppDimensions.fontXXL,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
                 CustomText(
-                  text: "johndoe@example.com",
-                  fontSize: 14,
-                  color: Colors.white.withOpacity(0.8),
+                  text: 'johndoe@example.com',
+                  fontSize: AppDimensions.fontS,
+                  color: Colors.white.withValues(alpha: 0.8),
                 ),
               ],
             ),
@@ -94,10 +92,10 @@ class ProfileScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: getWidth(4), bottom: getHeight(12)),
+          padding: EdgeInsets.only(left: getWidth(AppDimensions.paddingXS), bottom: getHeight(AppDimensions.spaceM)),
           child: CustomText(
-            text: 'settings_title'.tr,
-            fontSize: 18,
+            text: AppStrings.settingsTitle.tr,
+            fontSize: AppDimensions.fontXL,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -105,39 +103,39 @@ class ProfileScreen extends StatelessWidget {
           context,
           colors,
           icon: Icons.brightness_6_rounded,
-          title: 'theme'.tr,
+          title: AppStrings.theme.tr,
           child: Obx(() => DropdownButton<String>(
                 value: SettingsUtil.currentTheme.value,
                 icon: Icon(Icons.keyboard_arrow_down_rounded, color: colors.primary),
                 underline: const SizedBox(),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(getRadius(AppDimensions.radiusL)),
                 dropdownColor: Theme.of(context).cardColor,
                 items: [
-                  DropdownMenuItem(value: 'system', child: CustomText(text: 'theme_auto'.tr)),
-                  DropdownMenuItem(value: 'light', child: CustomText(text: 'theme_light'.tr)),
-                  DropdownMenuItem(value: 'dark', child: CustomText(text: 'theme_dark'.tr)),
+                  DropdownMenuItem(value: 'system', child: CustomText(text: AppStrings.themeAuto.tr)),
+                  DropdownMenuItem(value: 'light', child: CustomText(text: AppStrings.themeLight.tr)),
+                  DropdownMenuItem(value: 'dark', child: CustomText(text: AppStrings.themeDark.tr)),
                 ],
                 onChanged: (String? theme) {
                   if (theme != null) SettingsUtil.changeTheme(theme);
                 },
               )),
         ),
-        SizedBox(height: getHeight(16)),
+        SizedBox(height: getHeight(AppDimensions.spaceL)),
         _buildSettingCard(
           context,
           colors,
           icon: Icons.language_rounded,
-          title: 'language'.tr,
+          title: AppStrings.language.tr,
           child: Obx(() => DropdownButton<String>(
                 value: SettingsUtil.currentLanguage.value,
                 icon: Icon(Icons.keyboard_arrow_down_rounded, color: colors.primary),
                 underline: const SizedBox(),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(getRadius(AppDimensions.radiusL)),
                 dropdownColor: Theme.of(context).cardColor,
                 items: [
-                  DropdownMenuItem(value: 'en', child: CustomText(text: 'lang_en'.tr)),
-                  DropdownMenuItem(value: 'ar', child: CustomText(text: 'lang_ar'.tr)),
-                  DropdownMenuItem(value: 'bn', child: CustomText(text: 'lang_bn'.tr)),
+                  DropdownMenuItem(value: 'en', child: CustomText(text: AppStrings.langEn.tr)),
+                  DropdownMenuItem(value: 'ar', child: CustomText(text: AppStrings.langAr.tr)),
+                  DropdownMenuItem(value: 'bn', child: CustomText(text: AppStrings.langBn.tr)),
                 ],
                 onChanged: (String? lang) {
                   if (lang != null) SettingsUtil.changeLanguage(lang);
@@ -149,34 +147,34 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildSettingCard(
-    BuildContext context, 
+    BuildContext context,
     AppColorScheme colors, {
     required IconData icon,
     required String title,
     required Widget child,
   }) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: getWidth(16), vertical: getHeight(8)),
+      padding: EdgeInsets.symmetric(horizontal: getWidth(AppDimensions.paddingL), vertical: getHeight(AppDimensions.paddingS)),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(getRadius(16)),
-        border: Border.all(color: colors.outline.withOpacity(0.1)),
+        borderRadius: BorderRadius.circular(getRadius(AppDimensions.radiusXL)),
+        border: Border.all(color: colors.outline.withValues(alpha: 0.1)),
       ),
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(getRadius(8)),
+            padding: EdgeInsets.all(getRadius(AppDimensions.paddingS)),
             decoration: BoxDecoration(
-              color: colors.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
+              color: colors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusM),
             ),
-            child: Icon(icon, color: colors.primary, size: getRadius(22)),
+            child: Icon(icon, color: colors.primary, size: getRadius(AppDimensions.radiusXXL)),
           ),
-          SizedBox(width: getWidth(16)),
+          SizedBox(width: getWidth(AppDimensions.spaceL)),
           Expanded(
             child: CustomText(
               text: title,
-              fontSize: 15,
+              fontSize: AppDimensions.fontM,
               fontWeight: FontWeight.w500,
             ),
           ),

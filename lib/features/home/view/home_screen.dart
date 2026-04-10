@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:file_uploader/core/utils/app_size_class.dart';
-import 'package:file_uploader/core/theme/app_colors.dart';
-import 'package:file_uploader/core/widgets/skeleton_item.dart';
-import 'package:file_uploader/core/widgets/custom_text.dart';
+import 'package:file_uploader/core/core.dart';
 import 'package:file_uploader/core/widgets/empty_view.dart';
 import '../controller/home_controller.dart';
 
@@ -27,20 +24,20 @@ class HomeScreen extends StatelessWidget {
           if (controller.errorMsg.isNotEmpty && controller.posts.isEmpty) {
             return Center(
               child: Padding(
-                padding: EdgeInsets.all(getRadius(32)),
+                padding: EdgeInsets.all(getRadius(AppDimensions.paddingXXL)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error_outline, size: getRadius(64), color: colors.error),
-                    SizedBox(height: getHeight(16)),
+                    Icon(Icons.error_outline, size: getRadius(AppDimensions.spaceMassive), color: colors.error),
+                    SizedBox(height: getHeight(AppDimensions.spaceL)),
                     CustomText(
                       text: controller.errorMsg.value,
                       color: colors.error,
                       textAlign: TextAlign.center,
-                      fontSize: 16,
+                      fontSize: AppDimensions.fontL,
                       fontWeight: FontWeight.bold,
                     ),
-                    SizedBox(height: getHeight(24)),
+                    SizedBox(height: getHeight(AppDimensions.spaceXL)),
                     ElevatedButton(
                       onPressed: controller.refreshData,
                       child: Text('retry'.tr),
@@ -61,10 +58,10 @@ class HomeScreen extends StatelessWidget {
               controller: controller.scrollController,
               padding: EdgeInsets.symmetric(
                 horizontal: hPadding,
-                vertical: getHeight(16),
+                vertical: getHeight(AppDimensions.paddingL),
               ),
               itemCount: controller.posts.length + (controller.isMoreLoading.value ? 1 : 0),
-              separatorBuilder: (context, index) => SizedBox(height: getHeight(12)),
+              separatorBuilder: (context, index) => SizedBox(height: getHeight(AppDimensions.spaceM)),
               itemBuilder: (context, index) {
                 if (index >= controller.posts.length) {
                   return const SkeletonItem();
@@ -93,9 +90,9 @@ class _CardItem extends StatelessWidget {
       elevation: 0,
       child: InkWell(
         onTap: () {},
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusL),
         child: Padding(
-          padding: EdgeInsets.all(getRadius(16)),
+          padding: EdgeInsets.all(getRadius(AppDimensions.paddingL)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -103,37 +100,37 @@ class _CardItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    width: getRadius(40),
-                    height: getRadius(40),
+                    width: getRadius(AppDimensions.iconXXL),
+                    height: getRadius(AppDimensions.iconXXL),
                     decoration: BoxDecoration(
                       gradient: colors.primaryGradient,
-                      borderRadius: BorderRadius.circular(getRadius(10)),
+                      borderRadius: BorderRadius.circular(getRadius(AppDimensions.radiusM)),
                     ),
                     child: Center(
                       child: CustomText(
                         text: "${item.id}",
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                        fontSize: AppDimensions.fontS,
                       ),
                     ),
                   ),
-                  SizedBox(width: getWidth(12)),
+                  SizedBox(width: getWidth(AppDimensions.spaceM)),
                   Expanded(
                     child: CustomText(
                       text: item.title ?? 'No Title',
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: AppDimensions.fontL,
                       maxLines: 2,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: getHeight(12)),
+              SizedBox(height: getHeight(AppDimensions.spaceM)),
               CustomText(
                 text: item.body ?? 'No Description',
                 color: colors.textSecondary,
-                fontSize: 14,
+                fontSize: AppDimensions.fontS,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),

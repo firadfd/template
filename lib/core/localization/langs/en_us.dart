@@ -39,4 +39,13 @@ const Map<String, String> enUS = {
   'lang_ar': 'Arabic',
   'lang_bn': 'Bengali',
   'logout': 'Logout',
+
+  // Common / Network
+  'error': 'Error',
+  'success': 'Success',
+  'loading': 'Loading...',
+  'network_error': 'A network error occurred. Please try again.',
+  'no_internet': 'No internet connection.',
+  'request_timeout': 'Request timed out. Please try again.',
+  'request_failed': 'Request failed.',
 };

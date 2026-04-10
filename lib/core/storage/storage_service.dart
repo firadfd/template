@@ -1,71 +1,65 @@
-import 'package:get_storage/get_storage.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import 'storage_keys.dart';
 
 class StorageService extends GetxService {
   final GetStorage _box = GetStorage();
-  
-  static const String _accessTokenKey = 'access_token';
-  static const String _refreshTokenKey = 'refresh_token';
-  static const String _expiryKey = 'expires_in';
+  final FlutterSecureStorage _secureBox = const FlutterSecureStorage(
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+  );
 
-  static const String _themeKey = 'theme_mode';
-  static const String _langKey = 'lang_code';
+  // ─── Theme ────────────────────────────────────────────────────────────────
 
-  static const String _onboardedKey = 'has_onboarded';
+  Future<void> saveTheme(String theme) async => _box.write(StorageKeys.themeMode, theme);
 
-  Future<void> saveTheme(String theme) async {
-    await _box.write(_themeKey, theme);
-  }
+  String? getTheme() => _box.read<String>(StorageKeys.themeMode);
 
-  bool hasOnboarded() {
-    return _box.read<bool>(_onboardedKey) ?? false;
-  }
+  // ─── Language ─────────────────────────────────────────────────────────────
 
-  Future<void> setOnboarded() async {
-    await _box.write(_onboardedKey, true);
-  }
+  Future<void> saveLanguage(String lang) async => _box.write(StorageKeys.langCode, lang);
 
-  String? getTheme() {
-    return _box.read<String>(_themeKey);
-  }
+  String? getLanguage() => _box.read<String>(StorageKeys.langCode);
 
-  Future<void> saveLanguage(String lang) async {
-    await _box.write(_langKey, lang);
-  }
+  // ─── Onboarding ───────────────────────────────────────────────────────────
 
-  String? getLanguage() {
-    return _box.read<String>(_langKey);
-  }
+  bool hasOnboarded() => _box.read<bool>(StorageKeys.hasOnboarded) ?? false;
 
-  Future<void> saveTokens({required String accessToken, required String refreshToken, required int expiresIn}) async {
-    await _box.write(_accessTokenKey, accessToken);
-    await _box.write(_refreshTokenKey, refreshToken);
-    // Add expiry timestamp based on current time + expires in
+  Future<void> setOnboarded() async => _box.write(StorageKeys.hasOnboarded, true);
+
+  // ─── Auth Tokens ──────────────────────────────────────────────────────────
+
+  Future<void> saveTokens({
+    required String accessToken,
+    required String refreshToken,
+    required int expiresIn,
+  }) async {
+    await _secureBox.write(key: StorageKeys.accessToken, value: accessToken);
+    await _secureBox.write(key: StorageKeys.refreshToken, value: refreshToken);
+    
     final expiryTime = DateTime.now().millisecondsSinceEpoch + (expiresIn * 1000);
-    await _box.write(_expiryKey, expiryTime);
+    await _box.write(StorageKeys.tokenExpiry, expiryTime); // Expiry isn't sensitive
   }
 
-  String? getAccessToken() {
-    return _box.read<String>(_accessTokenKey);
-  }
+  Future<String?> getAccessToken() => _secureBox.read(key: StorageKeys.accessToken);
 
-  String? getRefreshToken() {
-    return _box.read<String>(_refreshTokenKey);
-  }
+  Future<String?> getRefreshToken() => _secureBox.read(key: StorageKeys.refreshToken);
 
   bool isAccessTokenExpired() {
-    final expiry = _box.read<int>(_expiryKey);
+    final expiry = _box.read<int>(StorageKeys.tokenExpiry);
     if (expiry == null) return true;
     return DateTime.now().millisecondsSinceEpoch > expiry;
   }
 
   Future<void> clearAuth() async {
-    await _box.remove(_accessTokenKey);
-    await _box.remove(_refreshTokenKey);
-    await _box.remove(_expiryKey);
+    await _secureBox.delete(key: StorageKeys.accessToken);
+    await _secureBox.delete(key: StorageKeys.refreshToken);
+    await _box.remove(StorageKeys.tokenExpiry);
   }
 
   Future<void> clearAll() async {
     await _box.erase();
+    await _secureBox.deleteAll();
   }
 }

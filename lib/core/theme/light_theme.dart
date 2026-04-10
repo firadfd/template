@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
+import 'app_dimensions.dart';
 
 ThemeData lightThemeData() {
   const colors = AppColorScheme.light;
@@ -31,7 +32,7 @@ ThemeData lightThemeData() {
       elevation: 0,
       centerTitle: true,
       titleTextStyle: GoogleFonts.inter(
-        fontSize: 18,
+        fontSize: AppDimensions.fontXL,
         fontWeight: FontWeight.w600,
         color: Colors.white,
       ),
@@ -41,24 +42,24 @@ ThemeData lightThemeData() {
     cardTheme: CardThemeData(
       color: colors.surface,
       elevation: 2,
-      shadowColor: colors.primary.withOpacity(0.08),
+      shadowColor: colors.primary.withValues(alpha: 0.08),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: colors.border, width: 0.5),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusL),
+        side: BorderSide(color: colors.border, width: AppDimensions.borderWidthThin),
       ),
       margin: EdgeInsets.zero,
     ),
 
     dividerTheme: DividerThemeData(
       color: colors.divider,
-      thickness: 1,
+      thickness: AppDimensions.borderWidthMedium,
       space: 0,
     ),
 
     textTheme: GoogleFonts.interTextTheme(base.textTheme).copyWith(
       displayLarge: GoogleFonts.inter(
         color: colors.textPrimary,
-        fontSize: 32,
+        fontSize: AppDimensions.fontDisplay,
         fontWeight: FontWeight.bold,
       ),
       displayMedium: GoogleFonts.inter(
@@ -68,29 +69,29 @@ ThemeData lightThemeData() {
       ),
       titleLarge: GoogleFonts.inter(
         color: colors.textPrimary,
-        fontSize: 20,
+        fontSize: AppDimensions.fontXXL,
         fontWeight: FontWeight.w600,
       ),
       titleMedium: GoogleFonts.inter(
         color: colors.textPrimary,
-        fontSize: 16,
+        fontSize: AppDimensions.fontL,
         fontWeight: FontWeight.w500,
       ),
       bodyLarge: GoogleFonts.inter(
         color: colors.textPrimary,
-        fontSize: 16,
+        fontSize: AppDimensions.fontL,
       ),
       bodyMedium: GoogleFonts.inter(
         color: colors.textSecondary,
-        fontSize: 14,
+        fontSize: AppDimensions.fontS,
       ),
       bodySmall: GoogleFonts.inter(
         color: colors.textHint,
-        fontSize: 12,
+        fontSize: AppDimensions.fontXS,
       ),
       labelLarge: GoogleFonts.inter(
         color: colors.textPrimary,
-        fontSize: 14,
+        fontSize: AppDimensions.fontS,
         fontWeight: FontWeight.w600,
       ),
     ),
@@ -99,13 +100,13 @@ ThemeData lightThemeData() {
       style: ElevatedButton.styleFrom(
         backgroundColor: colors.primary,
         foregroundColor: Colors.white,
-        minimumSize: const Size.fromHeight(48),
+        minimumSize: const Size.fromHeight(AppDimensions.buttonHeight),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusM),
         ),
         elevation: 0,
         textStyle: GoogleFonts.inter(
-          fontSize: 15,
+          fontSize: AppDimensions.fontM,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -114,13 +115,13 @@ ThemeData lightThemeData() {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: colors.primary,
-        minimumSize: const Size.fromHeight(48),
+        minimumSize: const Size.fromHeight(AppDimensions.buttonHeight),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusM),
         ),
-        side: BorderSide(color: colors.primary, width: 1.5),
+        side: BorderSide(color: colors.primary, width: AppDimensions.borderWidthThick),
         textStyle: GoogleFonts.inter(
-          fontSize: 15,
+          fontSize: AppDimensions.fontM,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -130,7 +131,7 @@ ThemeData lightThemeData() {
       style: TextButton.styleFrom(
         foregroundColor: colors.primary,
         textStyle: GoogleFonts.inter(
-          fontSize: 14,
+          fontSize: AppDimensions.fontS,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -141,28 +142,31 @@ ThemeData lightThemeData() {
       fillColor: colors.surfaceVariant,
       hintStyle: GoogleFonts.inter(
         color: colors.textHint,
-        fontSize: 14,
+        fontSize: AppDimensions.fontS,
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.paddingL,
+        vertical: AppDimensions.paddingL - 2,
+      ),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusM),
         borderSide: BorderSide(color: colors.border),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusM),
         borderSide: BorderSide(color: colors.border),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(color: colors.primary, width: 1.5),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+        borderSide: BorderSide(color: colors.primary, width: AppDimensions.borderWidthThick),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusM),
         borderSide: BorderSide(color: colors.error),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(color: colors.error, width: 1.5),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+        borderSide: BorderSide(color: colors.error, width: AppDimensions.borderWidthThick),
       ),
     ),
 
@@ -177,9 +181,11 @@ ThemeData lightThemeData() {
       backgroundColor: colors.elevatedSurface,
       contentTextStyle: GoogleFonts.inter(
         color: colors.textPrimary,
-        fontSize: 14,
+        fontSize: AppDimensions.fontS,
       ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+      ),
       behavior: SnackBarBehavior.floating,
     ),
 

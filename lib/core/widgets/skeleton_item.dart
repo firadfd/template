@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../utils/app_size_class.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_dimensions.dart';
 
 class SkeletonItem extends StatelessWidget {
   const SkeletonItem({super.key});
@@ -17,10 +18,10 @@ class SkeletonItem extends StatelessWidget {
         margin: EdgeInsets.zero,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(getRadius(12)),
+          borderRadius: BorderRadius.circular(getRadius(AppDimensions.radiusL)),
         ),
         child: Padding(
-          padding: EdgeInsets.all(getRadius(16)),
+          padding: EdgeInsets.all(getRadius(AppDimensions.paddingL)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -28,36 +29,36 @@ class SkeletonItem extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     backgroundColor: Colors.white,
-                    radius: getRadius(20),
+                    radius: getRadius(AppDimensions.paddingXL),
                   ),
-                  SizedBox(width: getWidth(12)),
+                  SizedBox(width: getWidth(AppDimensions.spaceM)),
                   Expanded(
                     child: Container(
-                      height: getHeight(16),
+                      height: getHeight(AppDimensions.paddingL),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(getRadius(4)),
+                        borderRadius: BorderRadius.circular(getRadius(AppDimensions.paddingXS)),
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: getHeight(12)),
+              SizedBox(height: getHeight(AppDimensions.spaceM)),
               Container(
-                height: getHeight(14),
+                height: getHeight(AppDimensions.fontS),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(getRadius(4)),
+                  borderRadius: BorderRadius.circular(getRadius(AppDimensions.paddingXS)),
                 ),
               ),
-              SizedBox(height: getHeight(8)),
+              SizedBox(height: getHeight(AppDimensions.spaceS)),
               Container(
-                height: getHeight(14),
-                width: getWidth(200),
+                height: getHeight(AppDimensions.fontS),
+                width: getWidth(AppDimensions.skeletonWidthLarge),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(getRadius(4)),
+                  borderRadius: BorderRadius.circular(getRadius(AppDimensions.paddingXS)),
                 ),
               ),
             ],
@@ -78,10 +79,10 @@ class SkeletonListView extends StatelessWidget {
     return ListView.separated(
       padding: EdgeInsets.symmetric(
         horizontal: hPadding,
-        vertical: getHeight(16),
+        vertical: getHeight(AppDimensions.paddingL),
       ),
       itemCount: itemCount,
-      separatorBuilder: (context, index) => SizedBox(height: getHeight(12)),
+      separatorBuilder: (context, index) => SizedBox(height: getHeight(AppDimensions.spaceM)),
       itemBuilder: (context, index) => const SkeletonItem(),
     );
   }

@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'package:file_uploader/core/core.dart';
 import '../controller/onboarding_controller.dart';
-import 'package:file_uploader/core/utils/app_size_class.dart';
-import 'package:file_uploader/core/theme/app_colors.dart';
-import 'package:file_uploader/core/widgets/custom_button.dart';
-import 'package:file_uploader/core/widgets/custom_text.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Finding the globally bound controller
     final controller = Get.find<OnboardingController>();
 
     return Scaffold(
@@ -22,35 +19,35 @@ class OnboardingScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: getRadius(200),
-              height: getRadius(200),
+              width: getRadius(AppDimensions.logoSizeLarge),
+              height: getRadius(AppDimensions.logoSizeLarge),
               decoration: BoxDecoration(
-                color: context.appColors.primary.withOpacity(0.1),
+                color: context.appColors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.volunteer_activism_rounded,
-                size: 100,
+                size: getRadius(100),
                 color: context.appColors.primary,
               ),
             ),
-            SizedBox(height: getHeight(48)),
+            SizedBox(height: getHeight(AppDimensions.spaceHuge)),
             CustomText(
-              text: "onboarding_welcome".tr,
-              fontSize: 24,
+              text: AppStrings.onboardingWelcome.tr,
+              fontSize: AppDimensions.fontXXXL,
               fontWeight: FontWeight.bold,
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: getHeight(16)),
+            SizedBox(height: getHeight(AppDimensions.spaceL)),
             CustomText(
-              text: "onboarding_desc".tr,
-              fontSize: 16,
+              text: AppStrings.onboardingDesc.tr,
+              fontSize: AppDimensions.fontL,
               color: context.appColors.textSecondary,
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: getHeight(64)),
+            SizedBox(height: getHeight(AppDimensions.spaceMassive)),
             CustomButton(
-              text: "get_started".tr,
+              text: AppStrings.getStarted.tr,
               onPressed: controller.completeOnboarding,
             ),
           ],

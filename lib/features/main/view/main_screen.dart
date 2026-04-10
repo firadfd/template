@@ -1,8 +1,7 @@
-import 'package:file_uploader/core/theme/app_colors.dart';
-import 'package:file_uploader/core/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'package:file_uploader/core/core.dart';
 import '../controller/main_controller.dart';
 
 class MainScreen extends StatelessWidget {
@@ -10,7 +9,6 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Finding the globally bound controller
     final controller = Get.find<MainController>();
     final colors = context.appColors;
 
@@ -18,29 +16,17 @@ class MainScreen extends StatelessWidget {
       backgroundColor: colors.background,
       appBar: AppBar(
         title: Obx(() {
-          switch (controller.currentIndex.value) {
-            case 0:
-              return CustomText(
-                text: 'home_title'.tr,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              );
-            case 1:
-              return CustomText(
-                text: 'tab_profile'.tr,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              );
-            default:
-              return CustomText(
-                text: 'app_name'.tr,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              );
-          }
+          final title = switch (controller.currentIndex.value) {
+            0 => AppStrings.homeTitle.tr,
+            1 => AppStrings.tabProfile.tr,
+            _ => AppStrings.appName.tr,
+          };
+          return CustomText(
+            text: title,
+            fontSize: AppDimensions.fontXXL,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          );
         }),
       ),
       body: Obx(
@@ -62,27 +48,27 @@ class MainScreen extends StatelessWidget {
             BottomNavigationBarItem(
               icon: const Icon(Icons.home_rounded),
               activeIcon: const Icon(Icons.home_rounded),
-              label: 'tab_home'.tr,
+              label: AppStrings.tabHome.tr,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.home_rounded),
               activeIcon: const Icon(Icons.home_rounded),
-              label: 'tab_home'.tr,
+              label: AppStrings.tabHome.tr,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.home_rounded),
               activeIcon: const Icon(Icons.home_rounded),
-              label: 'tab_home'.tr,
+              label: AppStrings.tabHome.tr,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.home_rounded),
               activeIcon: const Icon(Icons.home_rounded),
-              label: 'tab_home'.tr,
+              label: AppStrings.tabHome.tr,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.person_outline_rounded),
               activeIcon: const Icon(Icons.person_rounded),
-              label: 'tab_profile'.tr,
+              label: AppStrings.tabProfile.tr,
             ),
           ],
         ),

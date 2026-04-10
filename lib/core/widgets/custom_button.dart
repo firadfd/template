@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/app_size_class.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_dimensions.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -24,20 +25,20 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: getHeight(52),
+      height: getHeight(AppDimensions.buttonHeight),
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: color ?? context.appColors.primary,
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(getRadius(12)),
+            borderRadius: BorderRadius.circular(getRadius(AppDimensions.radiusM)),
           ),
         ),
         child: isLoading
             ? SizedBox(
-                height: getHeight(24),
-                width: getHeight(24),
+                height: getRadius(AppDimensions.iconL),
+                width: getRadius(AppDimensions.iconL),
                 child: CircularProgressIndicator(
                   color: textColor ?? Colors.white,
                   strokeWidth: 2,
@@ -47,13 +48,13 @@ class CustomButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (icon != null) ...[
-                    Icon(icon, color: textColor ?? Colors.white, size: getRadius(20)),
-                    SizedBox(width: getWidth(8)),
+                    Icon(icon, color: textColor ?? Colors.white, size: getRadius(AppDimensions.iconM)),
+                    SizedBox(width: getWidth(AppDimensions.spaceS)),
                   ],
                   Text(
                     text,
                     style: TextStyle(
-                      fontSize: getSp(16),
+                      fontSize: getSp(AppDimensions.fontL),
                       fontWeight: FontWeight.bold,
                       color: textColor ?? Colors.white,
                     ),

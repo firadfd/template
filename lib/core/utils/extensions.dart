@@ -18,10 +18,6 @@ extension ContextExtension on BuildContext {
 
   AppSizeClass get sz => AppSizeClass.instance;
 
-  /// Quick access to the theme's colors.
-  AppColorScheme get appColors =>
-      Theme.of(this).extension<AppColorScheme>() ?? AppColorScheme.light;
-
   /// Quick access to the global theme data.
   ThemeData get theme => Theme.of(this);
 

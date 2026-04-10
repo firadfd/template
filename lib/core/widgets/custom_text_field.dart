@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/app_size_class.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_dimensions.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -28,15 +29,15 @@ class CustomTextField extends StatelessWidget {
       keyboardType: keyboardType,
       validator: validator,
       style: TextStyle(
-        fontSize: getSp(14),
+        fontSize: getSp(AppDimensions.fontS),
         color: colors.textPrimary,
       ),
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(color: colors.textHint),
         contentPadding: EdgeInsets.symmetric(
-          horizontal: getWidth(16),
-          vertical: getHeight(14),
+          horizontal: getWidth(AppDimensions.paddingL),
+          vertical: getHeight(AppDimensions.paddingS),
         ),
       ),
     );

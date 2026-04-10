@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/app_size_class.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_dimensions.dart';
 
 class CustomText extends StatelessWidget {
   final String text;
@@ -30,7 +31,7 @@ class CustomText extends StatelessWidget {
       maxLines: maxLines,
       overflow: overflow,
       style: TextStyle(
-        fontSize: getSp(fontSize ?? 14),
+        fontSize: getSp(fontSize ?? AppDimensions.fontS),
         fontWeight: fontWeight ?? FontWeight.normal,
         color: color ?? context.appColors.textPrimary,
       ),

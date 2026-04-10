@@ -15,7 +15,7 @@ class SplashController extends GetxController {
     // Standard delay for splash screen visibility
     await Future.delayed(const Duration(seconds: 3));
 
-    final String? token = _storageService.getAccessToken();
+    final String? token = await _storageService.getAccessToken();
     final bool hasOnboarded = _storageService.hasOnboarded();
 
     if (token != null && token.isNotEmpty) {
