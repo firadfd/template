@@ -41,8 +41,8 @@ To initialize this cleanly built template precisely from scratch anywhere:
 
 1. **Clone & Enter the Repository**
    ```bash
-   git clone https://github.com/firad-bdevs/starter-template.git
-   cd starter-template
+   https://github.com/firadfd/template.git
+   cd template
    ```
 
 2. **Fetch Dependencies**
