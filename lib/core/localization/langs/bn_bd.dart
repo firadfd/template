@@ -1,5 +1,6 @@
 const Map<String, String> bnBD = {
   'home_title': 'পোস্ট',
+  'latest_posts': 'সাম্প্রতিক পোস্টসমূহ',
   'retry': 'আবার চেষ্টা করুন',
 
   // Splash

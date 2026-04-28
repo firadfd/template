@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../utils/app_size_class.dart';
-import '../theme/app_colors.dart';
 import '../theme/app_dimensions.dart';
 
 class SkeletonItem extends StatelessWidget {
@@ -9,11 +8,8 @@ class SkeletonItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-
-    return Shimmer.fromColors(
-      baseColor: colors.surfaceVariant,
-      highlightColor: colors.elevatedSurface,
+    return Skeletonizer(
+      enabled: true,
       child: Card(
         margin: EdgeInsets.zero,
         elevation: 0,
@@ -27,39 +23,30 @@ class SkeletonItem extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     backgroundColor: Colors.white,
-                    radius: getRadius(AppDimensions.paddingXL),
+                    radius: 24,
                   ),
                   SizedBox(width: getWidth(AppDimensions.spaceM)),
                   Expanded(
                     child: Container(
-                      height: getHeight(AppDimensions.paddingL),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(getRadius(AppDimensions.paddingXS)),
-                      ),
+                      height: 16,
+                      color: Colors.white,
                     ),
                   ),
                 ],
               ),
               SizedBox(height: getHeight(AppDimensions.spaceM)),
               Container(
-                height: getHeight(AppDimensions.fontS),
+                height: 12,
                 width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(getRadius(AppDimensions.paddingXS)),
-                ),
+                color: Colors.white,
               ),
               SizedBox(height: getHeight(AppDimensions.spaceS)),
               Container(
-                height: getHeight(AppDimensions.fontS),
-                width: getWidth(AppDimensions.skeletonWidthLarge),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(getRadius(AppDimensions.paddingXS)),
-                ),
+                height: 12,
+                width: 200,
+                color: Colors.white,
               ),
             ],
           ),

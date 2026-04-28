@@ -1,5 +1,6 @@
 const Map<String, String> arSA = {
   'home_title': 'المنشورات',
+  'latest_posts': 'أحدث المنشورات',
   'retry': 'إعادة المحاولة',
 
   // Splash

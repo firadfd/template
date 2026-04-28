@@ -1,5 +1,6 @@
 const Map<String, String> enUS = {
   'home_title': 'Posts',
+  'latest_posts': 'Latest Posts',
   'retry': 'Retry',
 
   // Splash

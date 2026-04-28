@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 
@@ -35,31 +35,38 @@ class MyApp extends StatelessWidget {
       _ => const Locale('en', 'US'),
     };
 
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Premium Template',
-      theme: lightThemeData(),
-      darkTheme: darkThemeData(),
-      themeMode: initialTheme,
-      translations: AppTranslations(),
-      locale: initialLocale,
-      fallbackLocale: const Locale('en', 'US'),
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en', 'US'),
-        Locale('ar', 'SA'),
-        Locale('bn', 'BD'),
-      ],
-      initialBinding: AppBinding(),
-      initialRoute: AppRoutes.splash,
-      getPages: AppPages.routes,
+    return ScreenUtilInit(
+      designSize: const Size(375, 812), // iPhone X/11/12/13/14/15 size
+      minTextAdapt: true,
+      splitScreenMode: true,
       builder: (context, child) {
-        AppSizeClass.init(context);
-        return EasyLoading.init()(context, child);
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Premium Template',
+          theme: lightThemeData(),
+          darkTheme: darkThemeData(),
+          themeMode: initialTheme,
+          translations: AppTranslations(),
+          locale: initialLocale,
+          fallbackLocale: const Locale('en', 'US'),
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en', 'US'),
+            Locale('ar', 'SA'),
+            Locale('bn', 'BD'),
+          ],
+          initialBinding: AppBinding(),
+          initialRoute: AppRoutes.splash,
+          getPages: AppPages.routes,
+          builder: (context, child) {
+            AppSizeClass.init(context);
+            return child!;
+          },
+        );
       },
     );
   }

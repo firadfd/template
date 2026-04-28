@@ -29,11 +29,17 @@ class HomeController extends GetxController {
 
   void _scrollListener() {
     if (!scrollController.hasClients) return;
+    
     try {
-      final position = scrollController.positions.last;
-      if (position.extentAfter < 200) _loadMoreData();
+      // Safely check all attached scroll positions
+      for (final position in scrollController.positions) {
+        if (position.pixels >= position.maxScrollExtent - 200) {
+          _loadMoreData();
+          return; // Only trigger once per notification
+        }
+      }
     } catch (_) {
-      // Ignore scroll errors during route rebuilds
+      // Ignore errors during layout changes
     }
   }
 
@@ -72,6 +78,7 @@ class HomeController extends GetxController {
     if (isMoreLoading.value || isLoading.value || !_hasMoreData) return;
 
     try {
+      AppLogger.logDebug('Loading more data for page ${_currentPage + 1}');
       isMoreLoading.value = true;
       _currentPage++;
       final data = await _fetchPostsPage(_currentPage, _limit);

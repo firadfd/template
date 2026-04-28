@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -99,13 +101,16 @@ class NetworkCaller {
     // ✅ Connectivity check before any network call
     if (!await _isConnected()) {
       if (showErrorMessage) {
-        EasyLoading.showError(AppStrings.noInternet.tr);
+        Get.snackbar(AppStrings.error.tr, AppStrings.noInternet.tr,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Get.theme.colorScheme.error,
+            colorText: Get.theme.colorScheme.onError);
       }
       return ResponseData.failure(error: AppError.noInternet);
     }
 
     try {
-      if (showLoading) EasyLoading.show(status: AppStrings.loading.tr);
+      // if (showLoading) ... handle skeleton state in UI instead of global overlay
 
       final headers = await _getHeaders(isAuthCall: isAuthCall);
       AppLogger.logInfo('[$method] $url');
@@ -155,14 +160,24 @@ class NetworkCaller {
 
       return _handleResponse(response, showSuccessMessage: showSuccessMessage, showErrorMessage: showErrorMessage);
     } on TimeoutException {
-      if (showErrorMessage) EasyLoading.showError(AppStrings.requestTimeout.tr);
+      if (showErrorMessage) {
+        Get.snackbar(AppStrings.error.tr, AppStrings.requestTimeout.tr,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Get.theme.colorScheme.error,
+            colorText: Get.theme.colorScheme.onError);
+      }
       return ResponseData.failure(error: AppError.timeout, statusCode: 408);
     } catch (e) {
       AppLogger.logError('Network error', e);
-      if (showErrorMessage) EasyLoading.showError(AppStrings.networkError.tr);
+      if (showErrorMessage) {
+        Get.snackbar(AppStrings.error.tr, AppStrings.networkError.tr,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Get.theme.colorScheme.error,
+            colorText: Get.theme.colorScheme.onError);
+      }
       return ResponseData.failure(error: AppError.unknown);
     } finally {
-      if (showLoading) EasyLoading.dismiss();
+      // if (showLoading) ... dismiss handled in UI
     }
   }
 
@@ -181,7 +196,10 @@ class NetworkCaller {
     if (response.statusCode == 200 || response.statusCode == 201) {
       if (decoded is Map<String, dynamic> && decoded.containsKey('status') && decoded['status'] == 'success') {
         if (showSuccessMessage) {
-          EasyLoading.showSuccess(decoded['message'] ?? AppStrings.success.tr);
+          Get.snackbar(AppStrings.success.tr, decoded['message'] ?? AppStrings.success.tr,
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.green, // Keep green for success, or use Get.theme.colorScheme.primary if preferred
+              colorText: Colors.white);
         }
         return ResponseData.success(statusCode: response.statusCode, data: decoded['data']);
       }
@@ -191,7 +209,12 @@ class NetworkCaller {
     final errorMsg = decoded is Map ? (decoded['message'] as String?) : null;
     final appError = AppError.fromStatusCode(response.statusCode, message: errorMsg);
 
-    if (showErrorMessage) EasyLoading.showError(appError.message);
+    if (showErrorMessage) {
+      Get.snackbar(AppStrings.error.tr, appError.message,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Get.theme.colorScheme.error,
+          colorText: Get.theme.colorScheme.onError);
+    }
     return ResponseData.failure(error: appError, statusCode: response.statusCode);
   }
 
@@ -258,12 +281,17 @@ class NetworkCaller {
     bool showErrorMessage = true,
   }) async {
     if (!await _isConnected()) {
-      if (showErrorMessage) EasyLoading.showError(AppStrings.noInternet.tr);
+      if (showErrorMessage) {
+        Get.snackbar(AppStrings.error.tr, AppStrings.noInternet.tr,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Get.theme.colorScheme.error,
+            colorText: Get.theme.colorScheme.onError);
+      }
       return ResponseData.failure(error: AppError.noInternet);
     }
 
     try {
-      if (showLoading) EasyLoading.show(status: AppStrings.loading.tr);
+      // if (showLoading) ...
 
       final headers = await _getHeaders();
       final uri = Uri.parse(url);
@@ -281,10 +309,15 @@ class NetworkCaller {
       return _handleResponse(response, showSuccessMessage: showSuccessMessage, showErrorMessage: showErrorMessage);
     } catch (e) {
       AppLogger.logError('Upload error', e);
-      if (showErrorMessage) EasyLoading.showError(AppStrings.networkError.tr);
+      if (showErrorMessage) {
+        Get.snackbar(AppStrings.error.tr, AppStrings.networkError.tr,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Get.theme.colorScheme.error,
+            colorText: Get.theme.colorScheme.onError);
+      }
       return ResponseData.failure(error: AppError.unknown);
     } finally {
-      if (showLoading) EasyLoading.dismiss();
+      // if (showLoading) ...
     }
   }
 }

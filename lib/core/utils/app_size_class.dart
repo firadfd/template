@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Breakpoint definitions
 enum ScreenType { mobile, tablet, desktop, tv }
@@ -99,10 +100,10 @@ class AppSizeClass {
 
   // ── Responsive value methods ────────────────────────────────────────────────
 
-  double getSp(double size) => size * scaleFactor;
-  double getWidth(double size) => size * scaleFactor;
-  double getHeight(double size) => size * scaleFactor;
-  double getRadius(double size) => size * scaleFactor;
+  double getSp(double size) => size.sp;
+  double getWidth(double size) => size.w;
+  double getHeight(double size) => size.h;
+  double getRadius(double size) => size.r;
 
   T getValue<T>({
     required T mobile,
