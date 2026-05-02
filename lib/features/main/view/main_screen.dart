@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 
 import 'package:file_uploader/core/core.dart';
 import '../controller/main_controller.dart';
+import '../widgets/main_bottom_nav_bar.dart';
+import '../widgets/main_navigation_rail.dart';
+import '../widgets/main_app_bar.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -14,65 +17,34 @@ class MainScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: AppBar(
-        title: Obx(() {
-          final title = switch (controller.currentIndex.value) {
-            0 => AppStrings.homeTitle.tr,
-            1 => AppStrings.tabProfile.tr,
-            _ => AppStrings.appName.tr,
-          };
-          return CustomText(
-            text: title,
-            fontSize: AppDimensions.fontXXL,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          );
-        }),
-      ),
-      body: Obx(
-        () => IndexedStack(
-          index: controller.currentIndex.value,
-          children: controller.screens,
-        ),
-      ),
-      bottomNavigationBar: Obx(
-        () => BottomNavigationBar(
-          currentIndex: controller.currentIndex.value,
-          onTap: controller.changeTabIndex,
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: colors.primary,
-          unselectedItemColor: colors.textHint,
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
-          items: [
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.home_rounded),
-              activeIcon: const Icon(Icons.home_rounded),
-              label: AppStrings.tabHome.tr,
+      appBar: MainAppBar(controller: controller),
+      // ── Desktop/Tablet: side NavigationRail ──────────────────────────────
+      body: isTablet || isDesktop
+          ? Row(
+              children: [
+                MainNavigationRail(controller: controller),
+                const VerticalDivider(thickness: 1, width: 1),
+                Expanded(
+                  child: Obx(
+                    () => IndexedStack(
+                      index: controller.currentIndex.value,
+                      children: controller.screens,
+                    ),
+                  ),
+                ),
+              ],
+            )
+          // ── Mobile: regular body ─────────────────────────────────────────
+          : Obx(
+              () => IndexedStack(
+                index: controller.currentIndex.value,
+                children: controller.screens,
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.home_rounded),
-              activeIcon: const Icon(Icons.home_rounded),
-              label: AppStrings.tabHome.tr,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.home_rounded),
-              activeIcon: const Icon(Icons.home_rounded),
-              label: AppStrings.tabHome.tr,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.home_rounded),
-              activeIcon: const Icon(Icons.home_rounded),
-              label: AppStrings.tabHome.tr,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.person_outline_rounded),
-              activeIcon: const Icon(Icons.person_rounded),
-              label: AppStrings.tabProfile.tr,
-            ),
-          ],
-        ),
-      ),
+      // Only show bottom nav on mobile
+      bottomNavigationBar: (isTablet || isDesktop)
+          ? null
+          : MainBottomNavBar(controller: controller),
     );
   }
 }

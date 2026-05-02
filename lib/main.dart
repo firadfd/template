@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -15,5 +16,11 @@ Future<void> main() async {
   // without bypassing the service layer with raw GetStorage reads.
   Get.put<StorageService>(StorageService(), permanent: true);
 
-  runApp(const MyApp());
+  runApp(
+    DevicePreview(
+      // Set to false in production; true during development to preview layouts.
+      enabled: true,
+      builder: (context) => const MyApp(),
+    ),
+  );
 }

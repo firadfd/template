@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:file_uploader/core/core.dart';
 import '../controller/splash_controller.dart';
+import '../widgets/splash_logo_widget.dart';
+import '../widgets/splash_text_widget.dart';
+import '../widgets/splash_loader_widget.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -17,47 +21,11 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: getRadius(AppDimensions.logoSizeMedium),
-              height: getRadius(AppDimensions.logoSizeMedium),
-              decoration: BoxDecoration(
-                gradient: context.appColors.primaryGradient,
-                borderRadius: BorderRadius.circular(getRadius(AppDimensions.radiusXXL)),
-                boxShadow: [
-                  BoxShadow(
-                    color: context.appColors.primary.withValues(alpha: 0.3),
-                    blurRadius: AppDimensions.radiusXXL,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
-              ),
-              child: Icon(
-                Icons.rocket_launch_rounded,
-                size: getRadius(60),
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(height: getHeight(AppDimensions.spaceXXL)),
-            CustomText(
-              text: AppStrings.appName.tr,
-              fontSize: AppDimensions.fontXXXL,
-              fontWeight: FontWeight.bold,
-            ),
-            SizedBox(height: getHeight(AppDimensions.spaceS)),
-            CustomText(
-              text: AppStrings.appTagline.tr,
-              fontSize: AppDimensions.fontS,
-              color: context.appColors.textSecondary,
-            ),
-            SizedBox(height: getHeight(AppDimensions.spaceHuge)),
-            SizedBox(
-              width: getRadius(AppDimensions.iconXXL),
-              height: getRadius(AppDimensions.iconXXL),
-              child: CircularProgressIndicator(
-                strokeWidth: AppDimensions.borderWidthExtraThick,
-                color: context.appColors.primary,
-              ),
-            ),
+            const SplashLogoWidget(),
+            SizedBox(height: AppDimensions.spaceXXL.h),
+            const SplashTextWidget(),
+            SizedBox(height: AppDimensions.spaceHuge.h),
+            const SplashLoaderWidget(),
           ],
         ),
       ),

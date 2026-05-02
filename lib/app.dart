@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -35,10 +36,13 @@ class MyApp extends StatelessWidget {
       _ => const Locale('en', 'US'),
     };
 
+    // ✅ Use a universal design size that works well across all screen sizes.
+    // ScreenUtil will scale from this baseline to match any device.
     return ScreenUtilInit(
-      designSize: const Size(375, 812), // iPhone X/11/12/13/14/15 size
+      designSize: const Size(390, 844), // iPhone 14 baseline
       minTextAdapt: true,
       splitScreenMode: true,
+      useInheritedMediaQuery: true, // Required for DevicePreview to work correctly
       builder: (context, child) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
@@ -47,7 +51,7 @@ class MyApp extends StatelessWidget {
           darkTheme: darkThemeData(),
           themeMode: initialTheme,
           translations: AppTranslations(),
-          locale: initialLocale,
+          locale: DevicePreview.locale(context) ?? initialLocale,
           fallbackLocale: const Locale('en', 'US'),
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
@@ -59,13 +63,18 @@ class MyApp extends StatelessWidget {
             Locale('ar', 'SA'),
             Locale('bn', 'BD'),
           ],
+          // ✅ DevicePreview builder must wrap the navigator to apply device
+          // frame, media query overrides and locale injection correctly.
+          builder: (context, child) {
+            // 1. Let DevicePreview inject its MediaQuery overrides
+            final previewChild = DevicePreview.appBuilder(context, child);
+            // 2. Re-initialise AppSizeClass after DevicePreview has overridden MediaQuery
+            AppSizeClass.init(context);
+            return previewChild;
+          },
           initialBinding: AppBinding(),
           initialRoute: AppRoutes.splash,
           getPages: AppPages.routes,
-          builder: (context, child) {
-            AppSizeClass.init(context);
-            return child!;
-          },
         );
       },
     );
