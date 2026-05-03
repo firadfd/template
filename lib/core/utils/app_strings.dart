@@ -10,6 +10,9 @@ class AppStrings {
 
   // ─── Navigation / Tabs ────────────────────────────────────────────────────
   static const String tabHome = 'tab_home';
+  static const String tabExplore = 'tab_explore';
+  static const String tabAlerts = 'tab_alerts';
+  static const String tabSaved = 'tab_saved';
   static const String tabProfile = 'tab_profile';
   static const String homeTitle = 'home_title';
 

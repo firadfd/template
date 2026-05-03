@@ -26,7 +26,8 @@ const Map<String, String> enUS = {
   // Main Tabs
   'tab_home': 'Home',
   'tab_explore': 'Explore',
-  'tab_history': 'History',
+  'tab_alerts': 'Alerts',
+  'tab_saved': 'Saved',
   'tab_profile': 'Profile',
 
   // Settings / Profile

@@ -26,7 +26,8 @@ const Map<String, String> bnBD = {
   // Main Tabs
   'tab_home': 'হোম',
   'tab_explore': 'এক্সপ্লোর',
-  'tab_history': 'ইতিহাস',
+  'tab_alerts': 'অ্যালার্ট',
+  'tab_saved': 'সংরক্ষিত',
   'tab_profile': 'প্রোফাইল',
 
   // Settings / Profile

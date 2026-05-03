@@ -31,17 +31,17 @@ class MainBottomNavBar extends StatelessWidget {
           BottomNavigationBarItem(
             icon: const Icon(Icons.explore_outlined),
             activeIcon: const Icon(Icons.explore_rounded),
-            label: 'Explore'.tr,
+            label: AppStrings.tabExplore.tr,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.notifications_outlined),
             activeIcon: const Icon(Icons.notifications_rounded),
-            label: 'Alerts'.tr,
+            label: AppStrings.tabAlerts.tr,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.bookmark_outline_rounded),
             activeIcon: const Icon(Icons.bookmark_rounded),
-            label: 'Saved'.tr,
+            label: AppStrings.tabSaved.tr,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.person_outline_rounded),

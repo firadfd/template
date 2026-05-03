@@ -40,17 +40,17 @@ class MainNavigationRail extends StatelessWidget {
           NavigationRailDestination(
             icon: const Icon(Icons.explore_outlined),
             selectedIcon: const Icon(Icons.explore_rounded),
-            label: Text('Explore'.tr),
+            label: Text(AppStrings.tabExplore.tr),
           ),
           NavigationRailDestination(
             icon: const Icon(Icons.notifications_outlined),
             selectedIcon: const Icon(Icons.notifications_rounded),
-            label: Text('Alerts'.tr),
+            label: Text(AppStrings.tabAlerts.tr),
           ),
           NavigationRailDestination(
             icon: const Icon(Icons.bookmark_outline_rounded),
             selectedIcon: const Icon(Icons.bookmark_rounded),
-            label: Text('Saved'.tr),
+            label: Text(AppStrings.tabSaved.tr),
           ),
           NavigationRailDestination(
             icon: const Icon(Icons.person_outline_rounded),

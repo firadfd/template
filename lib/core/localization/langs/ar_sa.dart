@@ -26,7 +26,8 @@ const Map<String, String> arSA = {
   // Main Tabs
   'tab_home': 'الرئيسية',
   'tab_explore': 'استكشف',
-  'tab_history': 'السجل',
+  'tab_alerts': 'التنبيهات',
+  'tab_saved': 'المحفوظات',
   'tab_profile': 'الملف الشخصي',
 
   // Settings / Profile
