@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:file_uploader/core/core.dart';
+import '../../../core/core.dart';
 
-/// The app name + tagline text block on the splash screen.
+/// The fd name + tagline text block on the splash screen.
 class SplashTextWidget extends StatelessWidget {
   const SplashTextWidget({super.key});
 

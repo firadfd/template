@@ -1,30 +1,29 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
-
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import '../storage/storage_service.dart';
-import '../utils/app_strings.dart';
 import '../utils/logger.dart';
 import '../../routes/app_routes.dart';
 import 'api_endpoints.dart';
 import 'app_error.dart';
 import 'response_data.dart';
 
+/// A pure network layer that handles requests, token refresh, and connectivity.
+/// UI feedback (snackbars/dialogs) should be handled by the Repository or Controller.
 class NetworkCaller {
-  final int _timeoutSeconds = 80;
+  final _timeoutSeconds = 30;
   final StorageService _storage = Get.find<StorageService>();
 
   // ─── Auth Headers ─────────────────────────────────────────────────────────
 
   Future<Map<String, String>> _getHeaders({bool isAuthCall = false}) async {
-    String? token = await _storage.getAccessToken();
+    var token = await _storage.getAccessToken();
 
+    // Check for expiration and refresh if necessary
     if (!isAuthCall && _storage.isAccessTokenExpired()) {
       final refreshed = await _refreshToken();
       if (!refreshed) await _logout();
@@ -48,7 +47,7 @@ class NetworkCaller {
       AppLogger.logInfo('Refreshing token...');
 
       final response = await http.post(
-        Uri.parse(ApiEndpoints.refreshToken), // ✅ Correct endpoint
+        Uri.parse(ApiEndpoints.refreshToken),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'refresh_token': refreshToken}),
       );
@@ -76,7 +75,7 @@ class NetworkCaller {
 
   Future<void> _logout() async {
     await _storage.clearAuth();
-    Get.offAllNamed(AppRoutes.login); // ✅ Navigate to login after clearing
+    Get.offAllNamed(AppRoutes.login);
   }
 
   // ─── Connectivity Check ───────────────────────────────────────────────────
@@ -93,25 +92,13 @@ class NetworkCaller {
     required String method,
     Map<String, dynamic>? body,
     bool isAuthCall = false,
-    bool showLoading = true,
-    bool showSuccessMessage = true,
-    bool showErrorMessage = true,
-    bool isRetry = false, // ✅ Recursion guard
+    bool isRetry = false,
   }) async {
-    // ✅ Connectivity check before any network call
     if (!await _isConnected()) {
-      if (showErrorMessage) {
-        Get.snackbar(AppStrings.error.tr, AppStrings.noInternet.tr,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Get.theme.colorScheme.error,
-            colorText: Get.theme.colorScheme.onError);
-      }
       return ResponseData.failure(error: AppError.noInternet);
     }
 
     try {
-      // if (showLoading) ... handle skeleton state in UI instead of global overlay
-
       final headers = await _getHeaders(isAuthCall: isAuthCall);
       AppLogger.logInfo('[$method] $url');
       if (body != null) AppLogger.logDebug('Body: ${jsonEncode(body)}');
@@ -139,7 +126,7 @@ class NetworkCaller {
           throw Exception('Invalid HTTP method: $method');
       }
 
-      // ✅ Token refresh + retry (with recursion guard via isRetry flag)
+      // Handle Unauthorized (401)
       if (response.statusCode == 401 && !isAuthCall && !isRetry) {
         final refreshed = await _refreshToken();
         if (refreshed) {
@@ -147,10 +134,7 @@ class NetworkCaller {
             url: url,
             method: method,
             body: body,
-            showLoading: showLoading,
-            showSuccessMessage: showSuccessMessage,
-            showErrorMessage: showErrorMessage,
-            isRetry: true, // ✅ Prevents second retry
+            isRetry: true,
           );
         } else {
           await _logout();
@@ -158,115 +142,61 @@ class NetworkCaller {
         }
       }
 
-      return _handleResponse(response, showSuccessMessage: showSuccessMessage, showErrorMessage: showErrorMessage);
+      return _handleResponse(response);
     } on TimeoutException {
-      if (showErrorMessage) {
-        Get.snackbar(AppStrings.error.tr, AppStrings.requestTimeout.tr,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Get.theme.colorScheme.error,
-            colorText: Get.theme.colorScheme.onError);
-      }
       return ResponseData.failure(error: AppError.timeout, statusCode: 408);
     } catch (e) {
       AppLogger.logError('Network error', e);
-      if (showErrorMessage) {
-        Get.snackbar(AppStrings.error.tr, AppStrings.networkError.tr,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Get.theme.colorScheme.error,
-            colorText: Get.theme.colorScheme.onError);
-      }
       return ResponseData.failure(error: AppError.unknown);
-    } finally {
-      // if (showLoading) ... dismiss handled in UI
     }
   }
 
   // ─── Response Handler ─────────────────────────────────────────────────────
 
-  ResponseData<dynamic> _handleResponse(
-    http.Response response, {
-    bool showSuccessMessage = true,
-    bool showErrorMessage = true,
-  }) {
+  ResponseData<dynamic> _handleResponse(http.Response response) {
     AppLogger.logInfo('Status: ${response.statusCode}');
     AppLogger.logDebug('Body: ${response.body}');
 
-    final decoded = jsonDecode(response.body);
+    try {
+      final decoded = jsonDecode(response.body);
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      if (decoded is Map<String, dynamic> && decoded.containsKey('status') && decoded['status'] == 'success') {
-        if (showSuccessMessage) {
-          Get.snackbar(AppStrings.success.tr, decoded['message'] ?? AppStrings.success.tr,
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: Colors.green, // Keep green for success, or use Get.theme.colorScheme.primary if preferred
-              colorText: Colors.white);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Handle common API success structures
+        if (decoded is Map<String, dynamic> && decoded.containsKey('status') && decoded['status'] == 'success') {
+          return ResponseData.success(statusCode: response.statusCode, data: decoded['data']);
         }
-        return ResponseData.success(statusCode: response.statusCode, data: decoded['data']);
+        return ResponseData.success(statusCode: response.statusCode, data: decoded);
       }
-      return ResponseData.success(statusCode: response.statusCode, data: decoded);
-    }
 
-    final errorMsg = decoded is Map ? (decoded['message'] as String?) : null;
-    final appError = AppError.fromStatusCode(response.statusCode, message: errorMsg);
+      final errorMsg = decoded is Map ? (decoded['message'] as String?) : null;
+      final appError = AppError.fromStatusCode(response.statusCode, message: errorMsg);
 
-    if (showErrorMessage) {
-      Get.snackbar(AppStrings.error.tr, appError.message,
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Get.theme.colorScheme.error,
-          colorText: Get.theme.colorScheme.onError);
+      return ResponseData.failure(error: appError, statusCode: response.statusCode);
+    } catch (e) {
+      return ResponseData.failure(error: AppError.unknown, statusCode: response.statusCode);
     }
-    return ResponseData.failure(error: appError, statusCode: response.statusCode);
   }
 
   // ─── Public API ───────────────────────────────────────────────────────────
 
-  Future<ResponseData<dynamic>> getRequest(
-    String url, {
-    bool showLoading = true,
-    bool showSuccessMessage = false,
-    bool showErrorMessage = true,
-  }) {
-    return _sendRequest(url: url, method: 'GET', showLoading: showLoading, showSuccessMessage: showSuccessMessage, showErrorMessage: showErrorMessage);
+  Future<ResponseData<dynamic>> getRequest(String url) {
+    return _sendRequest(url: url, method: 'GET');
   }
 
-  Future<ResponseData<dynamic>> postRequest(
-    String url, {
-    Map<String, dynamic>? body,
-    bool isAuthCall = false,
-    bool showLoading = true,
-    bool showSuccessMessage = true,
-    bool showErrorMessage = true,
-  }) {
-    return _sendRequest(url: url, method: 'POST', body: body, isAuthCall: isAuthCall, showLoading: showLoading, showSuccessMessage: showSuccessMessage, showErrorMessage: showErrorMessage);
+  Future<ResponseData<dynamic>> postRequest(String url, {Map<String, dynamic>? body, bool isAuthCall = false}) {
+    return _sendRequest(url: url, method: 'POST', body: body, isAuthCall: isAuthCall);
   }
 
-  Future<ResponseData<dynamic>> putRequest(
-    String url, {
-    Map<String, dynamic>? body,
-    bool showLoading = true,
-    bool showSuccessMessage = true,
-    bool showErrorMessage = true,
-  }) {
-    return _sendRequest(url: url, method: 'PUT', body: body, showLoading: showLoading, showSuccessMessage: showSuccessMessage, showErrorMessage: showErrorMessage);
+  Future<ResponseData<dynamic>> putRequest(String url, {Map<String, dynamic>? body}) {
+    return _sendRequest(url: url, method: 'PUT', body: body);
   }
 
-  Future<ResponseData<dynamic>> patchRequest(
-    String url, {
-    Map<String, dynamic>? body,
-    bool showLoading = true,
-    bool showSuccessMessage = true,
-    bool showErrorMessage = true,
-  }) {
-    return _sendRequest(url: url, method: 'PATCH', body: body, showLoading: showLoading, showSuccessMessage: showSuccessMessage, showErrorMessage: showErrorMessage);
+  Future<ResponseData<dynamic>> patchRequest(String url, {Map<String, dynamic>? body}) {
+    return _sendRequest(url: url, method: 'PATCH', body: body);
   }
 
-  Future<ResponseData<dynamic>> deleteRequest(
-    String url, {
-    bool showLoading = true,
-    bool showSuccessMessage = true,
-    bool showErrorMessage = true,
-  }) {
-    return _sendRequest(url: url, method: 'DELETE', showLoading: showLoading, showSuccessMessage: showSuccessMessage, showErrorMessage: showErrorMessage);
+  Future<ResponseData<dynamic>> deleteRequest(String url) {
+    return _sendRequest(url: url, method: 'DELETE');
   }
 
   // ─── Multipart ────────────────────────────────────────────────────────────
@@ -276,48 +206,32 @@ class NetworkCaller {
     required Map<String, String> fields,
     required String fileFieldName,
     required String filePath,
-    bool showLoading = true,
-    bool showSuccessMessage = true,
-    bool showErrorMessage = true,
   }) async {
     if (!await _isConnected()) {
-      if (showErrorMessage) {
-        Get.snackbar(AppStrings.error.tr, AppStrings.noInternet.tr,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Get.theme.colorScheme.error,
-            colorText: Get.theme.colorScheme.onError);
-      }
       return ResponseData.failure(error: AppError.noInternet);
     }
 
     try {
-      // if (showLoading) ...
-
       final headers = await _getHeaders();
       final uri = Uri.parse(url);
       final request = http.MultipartRequest('POST', uri);
+      
       request.headers.addAll({
         'Accept': 'application/json',
         if (headers.containsKey('Authorization')) 'Authorization': headers['Authorization']!,
       });
+      
       request.fields.addAll(fields);
       request.files.add(await http.MultipartFile.fromPath(fileFieldName, filePath));
 
       AppLogger.logInfo('Uploading to: $url');
       final streamedResponse = await request.send().timeout(Duration(seconds: _timeoutSeconds));
       final response = await http.Response.fromStream(streamedResponse);
-      return _handleResponse(response, showSuccessMessage: showSuccessMessage, showErrorMessage: showErrorMessage);
+      
+      return _handleResponse(response);
     } catch (e) {
       AppLogger.logError('Upload error', e);
-      if (showErrorMessage) {
-        Get.snackbar(AppStrings.error.tr, AppStrings.networkError.tr,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Get.theme.colorScheme.error,
-            colorText: Get.theme.colorScheme.onError);
-      }
       return ResponseData.failure(error: AppError.unknown);
-    } finally {
-      // if (showLoading) ...
     }
   }
 }

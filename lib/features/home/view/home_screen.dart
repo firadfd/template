@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:get/get.dart';
 
-import 'package:file_uploader/core/core.dart';
-import 'package:file_uploader/core/widgets/empty_view.dart';
+import '../../../core/core.dart';
+import '../../../core/widgets/empty_view.dart';
 import '../controller/home_controller.dart';
 import '../widgets/home_post_card.dart';
 import '../widgets/home_error_widget.dart';
@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomeController controller = Get.find<HomeController>();
+    final controller = Get.find<HomeController>();
 
     return Scaffold(
       backgroundColor: context.appColors.background,
@@ -43,7 +43,7 @@ class HomeScreen extends StatelessWidget {
                   itemCount: controller.isLoading.value
                       ? 6
                       : (controller.posts.length + (controller.isMoreLoading.value ? 1 : 0)),
-                  separatorBuilder: (_, __) => SizedBox(height: AppDimensions.spaceM.h),
+                  separatorBuilder: (_, _) => SizedBox(height: AppDimensions.spaceM.h),
                   itemBuilder: (context, index) {
                     if (controller.isLoading.value) {
                       return const HomePostCardSkeleton();

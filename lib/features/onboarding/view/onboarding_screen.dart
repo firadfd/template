@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:file_uploader/core/core.dart';
+import '../../../core/core.dart';
 import '../controller/onboarding_controller.dart';
 import '../widgets/onboarding_illustration_widget.dart';
 import '../widgets/onboarding_text_widget.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:file_uploader/core/core.dart';
-import 'package:file_uploader/core/utils/settings_util.dart';
+import '../../../../core/core.dart';
+import '../../../../core/utils/settings_util.dart';
 
 /// The "Settings" section containing theme and language pickers.
 class ProfileSettingsSectionWidget extends StatelessWidget {

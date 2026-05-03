@@ -1,43 +1,41 @@
 # 🚀 Flutter Ultimate Clean Architecture Template
 
-A production-ready **Flutter Starter Template** meticulously structured using **Clean Architecture** patterns securely powered natively by **GetX**. This fully modular toolkit scales seamlessly, enabling lightning-fast UI rendering alongside highly optimized robust data workflows!
+A production-ready **Flutter Starter Template** meticulously structured using **Clean Architecture** patterns securely powered by **GetX**. This fully modular toolkit scales seamlessly, enabling lightning-fast UI rendering alongside highly optimized robust data workflows!
 
 ---
 
 ## 🏗 Directory Structure
 
-This project completely isolates responsibilities natively across dedicated modules:
+This project completely isolates responsibilities across dedicated modules:
 
 ```text
 lib/
 ├── app.dart                        # Core MaterialApp Initialization
-├── main.dart                       # App entry point natively bound to initialization
+├── main.dart                       # App entry point & Storage bootstrap
 ├── bindings/
-│   └── app_binding.dart            # Centralized GetX Dependency Injection (Singleton Pattern)
+│   └── app_binding.dart            # Global Dependency Injection
 ├── core/                           # Foundation Utilities shared globally
-│   ├── network/                    # API Endpoints and Custom NetworkCaller Engine
+│   ├── config/                     # Environment & Flavor configurations (Dev, Staging, Prod)
+│   ├── network/                    # Pure Network Layer (Decoupled from UI)
 │   ├── storage/                    # GetStorage persistence interface
 │   ├── theme/                      # Separated Dark/Light mode color schemes (AppColorScheme)
-│   ├── localization/               # Externalized EN, AR, BN mapped translation dictionaries
-│   ├── utils/                      # Settings global utils, Assets structural mapper
-│   │   └── app_size_class.dart     # Global Responsive Engine (Mobile, Tablet, Desktop, TV)
-│   └── widgets/                    # Core generic UI components (Buttons, Skeleton items, Svgs)
-├── features/                       # Segmented modular apps exactly implementing clean workflows
+│   ├── localization/               # Externalized EN, AR, BN mapped translations
+│   ├── utils/                      # Responsive Engine, Assets mapper, Validators
+│   └── widgets/                    # Core generic UI components
+├── features/                       # Modular business logic features
 │   ├── splash/                     # Navigation & Auth logic hub
 │   ├── onboarding/                 # First-time user experience
 │   ├── auth/                       # Login & Registration modules
-│   ├── main/                       # Bottom Navigation hub (Home & Profile)
-│   └── home/                       # Core content module (API driven)
+│   ├── main/                       # Bottom Navigation & Rail hub
+│   └── home/                       # Feature-specific Repository, Binding, and Controller
 └── routes/
-    ├── app_pages.dart              # Global Navigation mappings statically
-    └── app_routes.dart             # Distinct string-based Route mapping URLs
+    ├── app_pages.dart              # Route mappings with Feature Bindings
+    └── app_routes.dart             # Static route URL constants
 ```
 
 ---
 
 ## 🚀 Initial Setup & Installation
-
-To initialize this cleanly built template precisely from scratch anywhere:
 
 1. **Clone & Enter the Repository**
    ```bash
@@ -46,7 +44,6 @@ To initialize this cleanly built template precisely from scratch anywhere:
    ```
 
 2. **Fetch Dependencies**
-   Run the following to completely pull down all explicitly bounded GetX, Networking, and Assets packages natively:
    ```bash
    flutter pub get
    ```
@@ -87,44 +84,39 @@ flutter pub run rename setAppName --value "Your App Name"
 
 ---
 
-## ✨ Outstanding Features Enabled Out Of The Box
+## ✨ Premium Features Included
 
-### 📱 1. Global Responsive Engine (Context-Free)
-The project includes a built-in `AppSizeClass` that handles all screen sizes natively (Mobile, Tablet, Desktop, and TV).
-- **Global Calls**: Use `getHeight(100)`, `getWidth(50)`, `getSp(16)`, `getRadius(12)` directly anywhere.
-- **Convenience**: No more `context` boilerplate for sizing!
-- **Adaptive**: Automatically recalculates on orientation change or window resizing.
+### 🏗 1. Feature-First Clean Architecture
+- **Decoupled Layers**: UI → Controller → Repository → NetworkCaller.
+- **Repository Pattern**: Data mapping (JSON to Object) happens in the Repository, keeping Controllers focused strictly on UI state.
+- **Feature Bindings**: Controllers are lazy-loaded only when the user enters a route and disposed when they leave, optimizing memory usage.
 
-### 📡 2. Robust API NetworkCaller 
-Includes an advanced, globally injected `NetworkCaller`.
-- Automatically parses success and error JSON gracefully without UI crashing.
-- Includes JWT **Auto-Refreshing Token** mechanisms built inside `_getHeaders()` and `_sendRequest()`.
-- Supports transparent background fetches. Easily disables UI-blocking `EasyLoading` overlays by setting `showLoading: false` inside requests!
+### 📱 2. Global Responsive Engine
+- **AppSizeClass**: Handles Mobile, Tablet, Desktop, and TV natively.
+- **Context-Free Sizing**: Use `getHeight(100)`, `getSp(16)`, etc., anywhere in your logic or UI.
 
-### ⚙️ 3. Universal State & Dependency Injection (GetX)
-No messy `StatefulWidget` sprawl or un-traceable components:
-- Centralized `AppBinding` natively handles injecting global Singletons (`StorageService`, `NetworkCaller`, etc.) the exact moment the app mounts.
-- Controllers bind to data gracefully allowing strictly optimal single-page modular logic! All Views are strictly `StatelessWidget`.
+### 🌐 3. Multi-Environment Support (Flavors)
+- **EnvConfig**: Built-in support for Development, Staging, and Production environments.
+- **Dynamic BaseURLs**: Automatically switches API endpoints based on the active environment.
 
-### 🌐 4. Multi-Language (Localization & RTL)
-Instantly globalize natively! 
-- Supports **English, Arabic (Right-to-Left Layout perfectly supported), and Bengali**.
-- Translations mapped to individually externalized files cleanly residing inside `lib/core/localization/langs/`.
+### 📡 4. Pure Network Engine
+- **Decoupled UI**: Network errors are passed back to the caller, allowing the UI to decide how to display them (Snackbar, Dialog, or Error Screen).
+- **Auto-Token Refresh**: Sophisticated JWT refresh logic with recursion guards built-in.
+- **Connectivity Guard**: Automatic check for internet connection before every request.
 
-### 🖥️ 5. Desktop & Large Screen Support
-Designed with a multi-platform mindset:
-- **NavigationRail**: Automatically switches from Bottom Navigation to a side Navigation Rail on desktop/tablet screens.
-- **Adaptive Layouts**: Uses `isDesktop`, `isTablet`, and `isMobile` helpers to adjust UI components (like AppBars and Sidebars) dynamically.
-- **Mouse & Keyboard**: Optimized for hover effects and scroll behaviors typical of desktop environments.
+### 🌍 5. Globalization & RTL
+- **Multi-Language**: English, Arabic, and Bengali supported out-of-the-box.
+- **RTL Support**: Arabic layout handles right-to-left directionality perfectly.
+
+### 🖥️ 6. Adaptive UI (Mobile & Desktop)
+- **Hybrid Navigation**: Automatically switches between `BottomNavigationBar` and `NavigationRail` based on screen width.
+- **Platform Optimized**: Designed for touch, mouse, and keyboard interactions.
 
 ---
 
 ## 🤝 Contributing
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
@@ -134,4 +126,4 @@ Don't forget to give the project a star! Thanks again!
 
 ---
 
-*Authored optimally for rapid scalability and extreme code readability. Never struggle to find where API calls or UI states originate again!*
+*Authored for rapid scalability and extreme code readability. Never struggle with state sprawl or messy API logic again!*

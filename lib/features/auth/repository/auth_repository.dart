@@ -1,6 +1,6 @@
-import 'package:file_uploader/core/network/api_endpoints.dart';
-import 'package:file_uploader/core/network/network_caller.dart';
-import 'package:file_uploader/core/network/response_data.dart';
+import '../../../core/network/api_endpoints.dart';
+import '../../../core/network/network_caller.dart';
+import '../../../core/network/response_data.dart';
 import 'package:get/get.dart';
 
 /// Handles all authentication-related network calls.
@@ -11,7 +11,6 @@ class AuthRepository {
   AuthRepository({NetworkCaller? networkCaller}) : _caller = networkCaller ?? Get.find<NetworkCaller>();
 
   /// Sends login credentials to the API.
-  /// Returns [ResponseData] with the auth token payload on success.
   Future<ResponseData<dynamic>> login({
     required String email,
     required String password,
@@ -20,19 +19,13 @@ class AuthRepository {
       ApiEndpoints.loginEndpoint,
       body: {'email': email, 'password': password},
       isAuthCall: true,
-      showSuccessMessage: false,
     );
   }
 
-  /// Logs out the user by revoking the token on the server (if applicable).
-  /// Token removal from local storage is handled separately by [StorageService].
-  Future<ResponseData<dynamic>> logout({String? accessToken}) {
+  /// Logs out the user by revoking the token on the server.
+  Future<ResponseData<dynamic>> logout() {
     return _caller.postRequest(
       '${ApiEndpoints.baseUrl}/auth/logout',
-      isAuthCall: false,
-      showLoading: false,
-      showSuccessMessage: false,
-      showErrorMessage: false,
     );
   }
 }

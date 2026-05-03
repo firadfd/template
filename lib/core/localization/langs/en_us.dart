@@ -1,27 +1,27 @@
 const Map<String, String> enUS = {
-  'home_title': 'Posts',
-  'latest_posts': 'Latest Posts',
-  'retry': 'Retry',
+  'home_title': 'Dashboard',
+  'latest_posts': 'Recent Activity',
+  'retry': 'Try Again',
 
   // Splash
-  'app_name': 'Starter Template',
-  'app_tagline': 'Powering your ideas',
+  'app_name': 'Flutter Template',
+  'app_tagline': 'Clean Architecture & GetX',
 
   // Onboarding
-  'onboarding_welcome': 'Welcome to Starter Template!',
-  'onboarding_desc': 'This is a placeholder for your feature-rich onboarding screens. Explain your core features here seamlessly.',
+  'onboarding_welcome': 'Welcome to Flutter Template',
+  'onboarding_desc': 'The ultimate starter kit for high-performance apps. Build faster, scale further.',
   'get_started': 'Get Started',
 
   // Login
-  'welcome_back': 'Welcome Back!',
-  'login_to_continue': 'Login to your account to continue.',
-  'email_hint': 'Enter your email',
-  'password_hint': 'Enter your password',
-  'login': 'Login',
-  'no_account': "Don't have an account?",
-  'sign_up': 'Sign Up',
-  'login_error': 'Error',
-  'fill_fields': 'Please fill in all fields',
+  'welcome_back': 'Welcome Back',
+  'login_to_continue': 'Please sign in to your account',
+  'email_hint': 'Email Address',
+  'password_hint': 'Password',
+  'login': 'Sign In',
+  'no_account': "New here?",
+  'sign_up': 'Create Account',
+  'login_error': 'Authentication Failed',
+  'fill_fields': 'Please provide all required information',
 
   // Main Tabs
   'tab_home': 'Home',
@@ -32,22 +32,22 @@ const Map<String, String> enUS = {
 
   // Settings / Profile
   'settings_title': 'Settings',
-  'language': 'Language',
-  'theme': 'Appearance',
-  'theme_auto': 'System',
+  'language': 'System Language',
+  'theme': 'Interface Theme',
+  'theme_auto': 'System Default',
   'theme_light': 'Light Mode',
   'theme_dark': 'Dark Mode',
   'lang_en': 'English',
   'lang_ar': 'Arabic',
   'lang_bn': 'Bengali',
-  'logout': 'Logout',
+  'logout': 'Sign Out',
 
   // Common / Network
   'error': 'Error',
   'success': 'Success',
-  'loading': 'Loading...',
-  'network_error': 'A network error occurred. Please try again.',
-  'no_internet': 'No internet connection.',
-  'request_timeout': 'Request timed out. Please try again.',
-  'request_failed': 'Request failed.',
+  'loading': 'Processing...',
+  'network_error': 'A network error occurred. Please verify your connection.',
+  'no_internet': 'No internet connection detected.',
+  'request_timeout': 'Connection timed out. Please try again.',
+  'request_failed': 'The request could not be completed.',
 };

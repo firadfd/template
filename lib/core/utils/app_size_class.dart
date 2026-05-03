@@ -62,8 +62,8 @@ class AppSizeClass {
   /// Should be called in the build method of your main App widget.
   static void init(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final double width = size.width;
-    final double height = size.height;
+    final width = size.width;
+    final height = size.height;
 
     final ScreenType type;
     final double scale;

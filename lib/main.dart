@@ -12,8 +12,6 @@ Future<void> main() async {
   await GetStorage.init();
   await SystemChrome.setPreferredOrientations([]);
 
-  // ✅ Bootstrap StorageService before runApp so app.dart can resolve it
-  // without bypassing the service layer with raw GetStorage reads.
   Get.put<StorageService>(StorageService(), permanent: true);
 
   runApp(

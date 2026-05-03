@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:file_uploader/core/storage/storage_service.dart';
-import 'package:file_uploader/routes/app_routes.dart';
+import '../../../core/storage/storage_service.dart';
+import '../../../routes/app_routes.dart';
 
 class OnboardingController extends GetxController {
   final StorageService _storageService = Get.find<StorageService>();

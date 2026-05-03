@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:file_uploader/core/utils/app_strings.dart';
-import 'package:file_uploader/core/utils/logger.dart';
+import '../../../core/utils/app_strings.dart';
+import '../../../core/utils/logger.dart';
 import '../model/home_model.dart';
 import '../repository/home_repository.dart';
 
@@ -30,28 +30,12 @@ class HomeController extends GetxController {
   void _scrollListener() {
     if (!scrollController.hasClients) return;
     
-    try {
-      // Safely check all attached scroll positions
-      for (final position in scrollController.positions) {
-        if (position.pixels >= position.maxScrollExtent - 200) {
-          _loadMoreData();
-          return; // Only trigger once per notification
-        }
+    for (final position in scrollController.positions) {
+      if (position.pixels >= position.maxScrollExtent - 200) {
+        _loadMoreData();
+        return;
       }
-    } catch (_) {
-      // Ignore errors during layout changes
     }
-  }
-
-  Future<List<HomeModel>> _fetchPostsPage(int page, int limit) async {
-    final response = await _homeRepository.getPosts(page: page, limit: limit);
-
-    if (response.isSuccess && response.data != null) {
-      final data = response.data as List<dynamic>;
-      return data.map((json) => HomeModel.fromJson(json as Map<String, dynamic>)).toList();
-    }
-
-    throw Exception(response.errorMessage.isNotEmpty ? response.errorMessage : 'API Request Failed');
   }
 
   Future<void> _fetchInitialData() async {
@@ -61,14 +45,22 @@ class HomeController extends GetxController {
       _currentPage = 1;
       _hasMoreData = true;
 
-      final data = await _fetchPostsPage(_currentPage, _limit);
-      posts
-        ..clear()
-        ..addAll(data);
+      final data = await _homeRepository.getPosts(page: _currentPage, limit: _limit);
+      
+      posts.assignAll(data);
       if (data.length < _limit) _hasMoreData = false;
     } catch (e) {
       errorMsg.value = e.toString().replaceAll('Exception: ', '');
       AppLogger.logError('Failed to fetch initial data', e);
+      
+      // Show UI feedback
+      Get.snackbar(
+        AppStrings.error.tr,
+        errorMsg.value,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Get.theme.colorScheme.error,
+        colorText: Get.theme.colorScheme.onError,
+      );
     } finally {
       isLoading.value = false;
     }
@@ -78,16 +70,22 @@ class HomeController extends GetxController {
     if (isMoreLoading.value || isLoading.value || !_hasMoreData) return;
 
     try {
-      AppLogger.logDebug('Loading more data for page ${_currentPage + 1}');
       isMoreLoading.value = true;
       _currentPage++;
-      final data = await _fetchPostsPage(_currentPage, _limit);
+      
+      final data = await _homeRepository.getPosts(page: _currentPage, limit: _limit);
+      
       if (data.isEmpty || data.length < _limit) _hasMoreData = false;
       posts.addAll(data);
     } catch (e) {
       _currentPage--;
       AppLogger.logError('Failed to load more data', e);
-      Get.snackbar(AppStrings.error.tr, e.toString().replaceAll('Exception: ', ''));
+      
+      Get.snackbar(
+        AppStrings.error.tr, 
+        e.toString().replaceAll('Exception: ', ''),
+        snackPosition: SnackPosition.BOTTOM,
+      );
     } finally {
       isMoreLoading.value = false;
     }

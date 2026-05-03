@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:file_uploader/core/core.dart';
+import '../../../../core/core.dart';
 
 /// The "Don't have an account? Sign Up" footer row.
 class LoginFooterWidget extends StatelessWidget {

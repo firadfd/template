@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:file_uploader/core/core.dart';
-import 'package:file_uploader/features/home/model/home_model.dart';
+import '../../../core/core.dart';
+import '../model/home_model.dart';
 
 /// A single post card used inside the home list.
 class HomePostCard extends StatelessWidget {
@@ -140,7 +140,7 @@ class HomePostCardSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HomePostCard(
+    return const HomePostCard(
       item: HomeModel(
         id: 1,
         title: 'This is a skeleton title placeholder that spans two lines',

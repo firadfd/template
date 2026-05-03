@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
-import 'package:file_uploader/features/auth/login/view/login_screen.dart';
-import 'package:file_uploader/features/auth/login/controller/login_controller.dart';
-import 'package:file_uploader/core/storage/storage_service.dart';
-import 'package:file_uploader/features/auth/repository/auth_repository.dart';
-import 'package:file_uploader/core/utils/app_size_class.dart';
+import 'package:template/features/auth/login/view/login_screen.dart';
+import 'package:template/features/auth/login/controller/login_controller.dart';
+import 'package:template/core/storage/storage_service.dart';
+import 'package:template/features/auth/repository/auth_repository.dart';
+import 'package:template/core/utils/app_size_class.dart';
 import '../../mocks/mocks.dart';
 
 void main() {

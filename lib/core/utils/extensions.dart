@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
 import 'app_size_class.dart';
 
 extension StringExtension on String {

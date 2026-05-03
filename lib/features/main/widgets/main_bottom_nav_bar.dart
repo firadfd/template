@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:file_uploader/core/core.dart';
+import '../../../../core/core.dart';
 import '../controller/main_controller.dart';
 
 /// The bottom navigation bar used on mobile/tablet screens.

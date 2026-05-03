@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:file_uploader/core/core.dart';
+import '../../../core/core.dart';
 
 /// The animated logo container shown on the splash screen.
 class SplashLogoWidget extends StatelessWidget {

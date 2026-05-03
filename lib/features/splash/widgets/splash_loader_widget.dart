@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:file_uploader/core/core.dart';
+import '../../../core/core.dart';
 
 /// The loading indicator shown at the bottom of the splash screen.
 class SplashLoaderWidget extends StatelessWidget {

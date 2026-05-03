@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:file_uploader/core/core.dart';
+import '../../../../core/core.dart';
 import '../controller/main_controller.dart';
 
 /// The left-side navigation rail used on desktop/large screens.

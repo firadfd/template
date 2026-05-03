@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:file_uploader/core/core.dart';
-import 'package:file_uploader/core/storage/storage_service.dart';
-import 'package:file_uploader/routes/app_routes.dart';
+import '../../../core/core.dart';
+import '../../../core/storage/storage_service.dart';
+import '../../../routes/app_routes.dart';
 import '../widgets/profile_header_widget.dart';
 import '../widgets/profile_settings_section.dart';
 

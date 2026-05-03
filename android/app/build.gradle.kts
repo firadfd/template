@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "app.akash.file_uploader"
+    namespace = "fd.firad.template"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

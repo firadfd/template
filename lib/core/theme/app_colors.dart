@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-/// Central color palette for the app.
+/// Central color palette for the fd.
 /// Use [AppColors.light] or [AppColors.dark] depending on theme brightness.
 ///
 /// Access via theme extension:
-///   Theme.of(context).extension<AppColorScheme>()!
+///   `Theme.of(context).extension<AppColorScheme>()!`
 class AppColors {
   AppColors._();
 

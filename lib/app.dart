@@ -21,16 +21,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // ✅ Use StorageService instead of bypassing it with raw GetStorage reads
     final storage = Get.find<StorageService>();
-    final String themePref = storage.getTheme() ?? 'system';
-    final String langPref = storage.getLanguage() ?? 'en';
+    final themePref = storage.getTheme() ?? 'system';
+    final langPref = storage.getLanguage() ?? 'en';
 
-    final ThemeMode initialTheme = switch (themePref) {
+    final initialTheme = switch (themePref) {
       'dark' => ThemeMode.dark,
       'light' => ThemeMode.light,
       _ => ThemeMode.system,
     };
 
-    final Locale initialLocale = switch (langPref) {
+    final initialLocale = switch (langPref) {
       StorageKeys.langCodeAr => const Locale('ar', 'SA'),
       StorageKeys.langCodeBn => const Locale('bn', 'BD'),
       _ => const Locale('en', 'US'),
