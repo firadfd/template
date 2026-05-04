@@ -20,14 +20,14 @@ class AppSnackbar {
 
     final colorScheme = Theme.of(context).colorScheme;
 
-    final Color backgroundColor = switch (type) {
+    final backgroundColor = switch (type) {
       SnackbarType.success => Colors.green.shade600,
       SnackbarType.error => colorScheme.error,
       SnackbarType.warning => Colors.orange.shade800,
       SnackbarType.info => colorScheme.primary,
     };
 
-    final IconData icon = switch (type) {
+    final icon = switch (type) {
       SnackbarType.success => Icons.check_circle_outline,
       SnackbarType.error => Icons.error_outline,
       SnackbarType.warning => Icons.warning_amber_rounded,
