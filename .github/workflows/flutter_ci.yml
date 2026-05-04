@@ -8,12 +8,18 @@ on:
   pull_request:
     branches: [ main, master, develop ]
 
+permissions:
+  contents: write
+  actions: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -38,15 +44,15 @@ jobs:
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-
-      - name: Create Git Tag (main branch only)
+          
+      - name: Create Git Tag
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
           TAG="v$(date +'%Y.%m.%d')-${GITHUB_SHA::7}"
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag $TAG
-          git push origin $TAG
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git $TAG
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
