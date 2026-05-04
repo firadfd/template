@@ -1,4 +1,5 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -16,8 +17,7 @@ Future<void> main() async {
 
   runApp(
     DevicePreview(
-      // Set to false in production; true during development to preview layouts.
-      enabled: true,
+      enabled: !kReleaseMode,
       builder: (context) => const MyApp(),
     ),
   );

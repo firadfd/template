@@ -19,7 +19,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ✅ Use StorageService instead of bypassing it with raw GetStorage reads
     final storage = Get.find<StorageService>();
     final themePref = storage.getTheme() ?? 'system';
     final langPref = storage.getLanguage() ?? 'en';
@@ -39,10 +38,10 @@ class MyApp extends StatelessWidget {
     // ✅ Use a universal design size that works well across all screen sizes.
     // ScreenUtil will scale from this baseline to match any device.
     return ScreenUtilInit(
-      designSize: const Size(390, 844), // iPhone 14 baseline
+      designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
-      useInheritedMediaQuery: true, // Required for DevicePreview to work correctly
+      useInheritedMediaQuery: true,
       builder: (context, child) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
@@ -63,12 +62,8 @@ class MyApp extends StatelessWidget {
             Locale('ar', 'SA'),
             Locale('bn', 'BD'),
           ],
-          // ✅ DevicePreview builder must wrap the navigator to apply device
-          // frame, media query overrides and locale injection correctly.
           builder: (context, child) {
-            // 1. Let DevicePreview inject its MediaQuery overrides
             final previewChild = DevicePreview.appBuilder(context, child);
-            // 2. Re-initialise AppSizeClass after DevicePreview has overridden MediaQuery
             AppSizeClass.init(context);
             return previewChild;
           },

@@ -3,54 +3,54 @@ import 'package:get/get.dart';
 
 import '../../../../core/storage/storage_service.dart';
 import '../../../../core/utils/app_strings.dart';
+import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../routes/app_routes.dart';
+import '../../repository/auth_repository.dart';
 
 class LoginController extends GetxController {
   final StorageService _storageService = Get.find<StorageService>();
+  final AuthRepository _authRepository = Get.find<AuthRepository>();
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   final isLoading = false.obs;
-
   Future<void> login() async {
-    if (emailController.text.trim().isEmpty || passwordController.text.isEmpty) {
-      Get.snackbar(
-        AppStrings.loginError.tr,
-        AppStrings.fillFields.tr,
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
+    if (emailController.text.trim().isEmpty ||
+        passwordController.text.isEmpty) {
+      _showSnackbar(AppStrings.loginError.tr, AppStrings.fillFields.tr);
       return;
     }
-
     isLoading.value = true;
 
-    // NOTE: In production, replace this with a real auth endpoint via AuthRepository.
-    /*
-    final response = await _authRepository.login(
-      email: emailController.text.trim(),
-      password: passwordController.text,
-    );
-    
-    if (!response.isSuccess) { 
-      Get.snackbar(AppStrings.error.tr, response.errorMessage);
+    try {
+      final response = await _authRepository.login(
+        email: emailController.text.trim(),
+        password: passwordController.text,
+      );
+
+      if (!response.isSuccess) {
+        _showSnackbar(AppStrings.error.tr, response.errorMessage);
+        return;
+      }
+
+      final data = response.data;
+      await _storageService.saveTokens(
+        accessToken: data['access_token'],
+        refreshToken: data['refresh_token'],
+        expiresIn: data['expires_in'],
+      );
+
+      Get.offAllNamed(AppRoutes.main);
+    } catch (e) {
+      _showSnackbar(AppStrings.error.tr, e.toString());
+    } finally {
       isLoading.value = false;
-      return; 
     }
-    */
+  }
 
-    // Simulated token save (replace with response.data in production)
-    await Future.delayed(const Duration(seconds: 1));
-    await _storageService.saveTokens(
-      accessToken: 'example_access_token',
-      refreshToken: 'example_refresh_token',
-      expiresIn: 3600,
-    );
-
-    isLoading.value = false;
-    Get.offAllNamed(AppRoutes.main);
+  void _showSnackbar(String title, String message) {
+    AppSnackbar.error(title: title, message: message,position: SnackbarPosition.bottom);
   }
 
   @override

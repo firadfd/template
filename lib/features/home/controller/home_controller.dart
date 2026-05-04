@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../core/utils/app_strings.dart';
 import '../../../core/utils/logger.dart';
+import '../../../core/widgets/app_snackbar.dart';
 import '../model/home_model.dart';
 import '../repository/home_repository.dart';
 
@@ -29,7 +30,7 @@ class HomeController extends GetxController {
 
   void _scrollListener() {
     if (!scrollController.hasClients) return;
-    
+
     for (final position in scrollController.positions) {
       if (position.pixels >= position.maxScrollExtent - 200) {
         _loadMoreData();
@@ -45,22 +46,19 @@ class HomeController extends GetxController {
       _currentPage = 1;
       _hasMoreData = true;
 
-      final data = await _homeRepository.getPosts(page: _currentPage, limit: _limit);
-      
+      final data = await _homeRepository.getPosts(
+        page: _currentPage,
+        limit: _limit,
+      );
+
       posts.assignAll(data);
       if (data.length < _limit) _hasMoreData = false;
     } catch (e) {
       errorMsg.value = e.toString().replaceAll('Exception: ', '');
       AppLogger.logError('Failed to fetch initial data', e);
-      
+
       // Show UI feedback
-      Get.snackbar(
-        AppStrings.error.tr,
-        errorMsg.value,
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Get.theme.colorScheme.error,
-        colorText: Get.theme.colorScheme.onError,
-      );
+      AppSnackbar.error(title: AppStrings.error.tr, message: errorMsg.value);
     } finally {
       isLoading.value = false;
     }
@@ -72,19 +70,21 @@ class HomeController extends GetxController {
     try {
       isMoreLoading.value = true;
       _currentPage++;
-      
-      final data = await _homeRepository.getPosts(page: _currentPage, limit: _limit);
-      
+
+      final data = await _homeRepository.getPosts(
+        page: _currentPage,
+        limit: _limit,
+      );
+
       if (data.isEmpty || data.length < _limit) _hasMoreData = false;
       posts.addAll(data);
     } catch (e) {
       _currentPage--;
       AppLogger.logError('Failed to load more data', e);
-      
-      Get.snackbar(
-        AppStrings.error.tr, 
-        e.toString().replaceAll('Exception: ', ''),
-        snackPosition: SnackPosition.BOTTOM,
+
+      AppSnackbar.error(
+        title: AppStrings.error.tr,
+        message: e.toString().replaceAll('Exception: ', ''),
       );
     } finally {
       isMoreLoading.value = false;

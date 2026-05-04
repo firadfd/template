@@ -17,7 +17,7 @@ class AuthRepository {
   }) {
     return _caller.postRequest(
       ApiEndpoints.loginEndpoint,
-      body: {'email': email, 'password': password},
+      body: {'username': email, 'password': password},
       isAuthCall: true,
     );
   }
