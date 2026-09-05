@@ -45,7 +45,10 @@ ThemeData darkThemeData() {
       shadowColor: Colors.black45,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppDimensions.radiusL),
-        side: BorderSide(color: colors.border, width: AppDimensions.borderWidthThin),
+        side: BorderSide(
+          color: colors.border,
+          width: AppDimensions.borderWidthThin,
+        ),
       ),
       margin: EdgeInsets.zero,
     ),
@@ -119,7 +122,10 @@ ThemeData darkThemeData() {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusM),
         ),
-        side: BorderSide(color: colors.primary, width: AppDimensions.borderWidthThick),
+        side: BorderSide(
+          color: colors.primary,
+          width: AppDimensions.borderWidthThick,
+        ),
         textStyle: GoogleFonts.inter(
           fontSize: AppDimensions.fontM,
           fontWeight: FontWeight.w600,
@@ -158,7 +164,10 @@ ThemeData darkThemeData() {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-        borderSide: BorderSide(color: colors.primary, width: AppDimensions.borderWidthThick),
+        borderSide: BorderSide(
+          color: colors.primary,
+          width: AppDimensions.borderWidthThick,
+        ),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppDimensions.radiusM),
@@ -166,7 +175,10 @@ ThemeData darkThemeData() {
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-        borderSide: BorderSide(color: colors.error, width: AppDimensions.borderWidthThick),
+        borderSide: BorderSide(
+          color: colors.error,
+          width: AppDimensions.borderWidthThick,
+        ),
       ),
     ),
 

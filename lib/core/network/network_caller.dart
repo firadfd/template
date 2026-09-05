@@ -5,9 +5,9 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../../routes/app_routes.dart';
 import '../storage/storage_service.dart';
 import '../utils/logger.dart';
-import '../../routes/app_routes.dart';
 import 'api_endpoints.dart';
 import 'app_error.dart';
 import 'response_data.dart';
@@ -16,7 +16,24 @@ import 'response_data.dart';
 /// UI feedback (snackbars/dialogs) should be handled by the Repository or Controller.
 class NetworkCaller {
   final _timeoutSeconds = 30;
-  final StorageService _storage = Get.find<StorageService>();
+  final StorageService _storage;
+  final http.Client _client;
+  final Future<bool> Function() _connectivityCheck;
+
+  /// All collaborators are injectable so this class can be unit-tested without
+  /// real sockets or platform plugins. Production code uses the defaults.
+  NetworkCaller({
+    StorageService? storage,
+    http.Client? client,
+    Future<bool> Function()? connectivityCheck,
+  }) : _storage = storage ?? Get.find<StorageService>(),
+       _client = client ?? http.Client(),
+       _connectivityCheck = connectivityCheck ?? _defaultConnectivityCheck;
+
+  static Future<bool> _defaultConnectivityCheck() async {
+    final results = await Connectivity().checkConnectivity();
+    return results.any((r) => r != ConnectivityResult.none);
+  }
 
   // ─── Auth Headers ─────────────────────────────────────────────────────────
 
@@ -39,14 +56,43 @@ class NetworkCaller {
 
   // ─── Token Refresh ────────────────────────────────────────────────────────
 
-  Future<bool> _refreshToken() async {
+  /// Guards against concurrent refreshes. Most backends rotate the refresh
+  /// token on use, so N parallel 401s firing N refreshes would invalidate each
+  /// other and log the user out. Callers arriving while a refresh is in flight
+  /// await that same result instead of starting their own.
+  Completer<bool>? _refreshCompleter;
+
+  Future<bool> _refreshToken() {
+    final inFlight = _refreshCompleter;
+    if (inFlight != null) return inFlight.future;
+
+    final completer = Completer<bool>();
+    _refreshCompleter = completer;
+
+    unawaited(
+      _performRefresh()
+          .then((success) {
+            _refreshCompleter = null;
+            completer.complete(success);
+          })
+          .catchError((Object e) {
+            _refreshCompleter = null;
+            AppLogger.logError('Token refresh failed', e);
+            completer.complete(false);
+          }),
+    );
+
+    return completer.future;
+  }
+
+  Future<bool> _performRefresh() async {
     try {
       final refreshToken = await _storage.getRefreshToken();
       if (refreshToken == null) return false;
 
       AppLogger.logInfo('Refreshing token...');
 
-      final response = await http.post(
+      final response = await _client.post(
         Uri.parse(ApiEndpoints.refreshToken),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'refresh_token': refreshToken}),
@@ -54,16 +100,24 @@ class NetworkCaller {
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
-        if (decoded['status'] == 'success') {
-          final data = decoded['data'];
-          await _storage.saveTokens(
-            accessToken: data['access_token'],
-            refreshToken: data['refresh_token'],
-            expiresIn: data['expires_in'],
-          );
-          AppLogger.logInfo('Token refreshed successfully');
-          return true;
+        final data = decoded is Map<String, dynamic> ? decoded['data'] : null;
+
+        if (data is Map<String, dynamic>) {
+          final accessToken = data['access_token'];
+          final refreshToken = data['refresh_token'];
+          final expiresIn = data['expires_in'];
+
+          if (accessToken is String && refreshToken is String) {
+            await _storage.saveTokens(
+              accessToken: accessToken,
+              refreshToken: refreshToken,
+              expiresIn: expiresIn is int ? expiresIn : 0,
+            );
+            AppLogger.logInfo('Token refreshed successfully');
+            return true;
+          }
         }
+        AppLogger.logError('Refresh response did not contain valid tokens');
       }
     } catch (e) {
       AppLogger.logError('Token refresh failed', e);
@@ -75,15 +129,10 @@ class NetworkCaller {
 
   Future<void> _logout() async {
     await _storage.clearAuth();
-    Get.offAllNamed(AppRoutes.login);
+    await Get.offAllNamed<void>(AppRoutes.login);
   }
 
   // ─── Connectivity Check ───────────────────────────────────────────────────
-
-  Future<bool> _isConnected() async {
-    final results = await Connectivity().checkConnectivity();
-    return results.any((r) => r != ConnectivityResult.none);
-  }
 
   // ─── Core Request ─────────────────────────────────────────────────────────
 
@@ -94,7 +143,7 @@ class NetworkCaller {
     bool isAuthCall = false,
     bool isRetry = false,
   }) async {
-    if (!await _isConnected()) {
+    if (!await _connectivityCheck()) {
       return ResponseData.failure(error: AppError.noInternet);
     }
 
@@ -108,19 +157,41 @@ class NetworkCaller {
 
       switch (method) {
         case 'GET':
-          response = await http.get(uri, headers: headers).timeout(Duration(seconds: _timeoutSeconds));
+          response = await _client
+              .get(uri, headers: headers)
+              .timeout(Duration(seconds: _timeoutSeconds));
           break;
         case 'POST':
-          response = await http.post(uri, headers: headers, body: body != null ? jsonEncode(body) : null).timeout(Duration(seconds: _timeoutSeconds));
+          response = await _client
+              .post(
+                uri,
+                headers: headers,
+                body: body != null ? jsonEncode(body) : null,
+              )
+              .timeout(Duration(seconds: _timeoutSeconds));
           break;
         case 'PUT':
-          response = await http.put(uri, headers: headers, body: body != null ? jsonEncode(body) : null).timeout(Duration(seconds: _timeoutSeconds));
+          response = await _client
+              .put(
+                uri,
+                headers: headers,
+                body: body != null ? jsonEncode(body) : null,
+              )
+              .timeout(Duration(seconds: _timeoutSeconds));
           break;
         case 'PATCH':
-          response = await http.patch(uri, headers: headers, body: body != null ? jsonEncode(body) : null).timeout(Duration(seconds: _timeoutSeconds));
+          response = await _client
+              .patch(
+                uri,
+                headers: headers,
+                body: body != null ? jsonEncode(body) : null,
+              )
+              .timeout(Duration(seconds: _timeoutSeconds));
           break;
         case 'DELETE':
-          response = await http.delete(uri, headers: headers).timeout(Duration(seconds: _timeoutSeconds));
+          response = await _client
+              .delete(uri, headers: headers)
+              .timeout(Duration(seconds: _timeoutSeconds));
           break;
         default:
           throw Exception('Invalid HTTP method: $method');
@@ -130,7 +201,7 @@ class NetworkCaller {
       if (response.statusCode == 401 && !isAuthCall && !isRetry) {
         final refreshed = await _refreshToken();
         if (refreshed) {
-          return _sendRequest(
+          return await _sendRequest(
             url: url,
             method: method,
             body: body,
@@ -138,7 +209,10 @@ class NetworkCaller {
           );
         } else {
           await _logout();
-          return ResponseData.failure(error: AppError.unauthorized, statusCode: 401);
+          return ResponseData.failure(
+            error: AppError.unauthorized,
+            statusCode: 401,
+          );
         }
       }
 
@@ -162,18 +236,35 @@ class NetworkCaller {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         // Handle common API success structures
-        if (decoded is Map<String, dynamic> && decoded.containsKey('status') && decoded['status'] == 'success') {
-          return ResponseData.success(statusCode: response.statusCode, data: decoded['data']);
+        if (decoded is Map<String, dynamic> &&
+            decoded.containsKey('status') &&
+            decoded['status'] == 'success') {
+          return ResponseData.success(
+            statusCode: response.statusCode,
+            data: decoded['data'],
+          );
         }
-        return ResponseData.success(statusCode: response.statusCode, data: decoded);
+        return ResponseData.success(
+          statusCode: response.statusCode,
+          data: decoded,
+        );
       }
 
       final errorMsg = decoded is Map ? (decoded['message'] as String?) : null;
-      final appError = AppError.fromStatusCode(response.statusCode, message: errorMsg);
+      final appError = AppError.fromStatusCode(
+        response.statusCode,
+        message: errorMsg,
+      );
 
-      return ResponseData.failure(error: appError, statusCode: response.statusCode);
+      return ResponseData.failure(
+        error: appError,
+        statusCode: response.statusCode,
+      );
     } catch (e) {
-      return ResponseData.failure(error: AppError.unknown, statusCode: response.statusCode);
+      return ResponseData.failure(
+        error: AppError.unknown,
+        statusCode: response.statusCode,
+      );
     }
   }
 
@@ -183,15 +274,30 @@ class NetworkCaller {
     return _sendRequest(url: url, method: 'GET');
   }
 
-  Future<ResponseData<dynamic>> postRequest(String url, {Map<String, dynamic>? body, bool isAuthCall = false}) {
-    return _sendRequest(url: url, method: 'POST', body: body, isAuthCall: isAuthCall);
+  Future<ResponseData<dynamic>> postRequest(
+    String url, {
+    Map<String, dynamic>? body,
+    bool isAuthCall = false,
+  }) {
+    return _sendRequest(
+      url: url,
+      method: 'POST',
+      body: body,
+      isAuthCall: isAuthCall,
+    );
   }
 
-  Future<ResponseData<dynamic>> putRequest(String url, {Map<String, dynamic>? body}) {
+  Future<ResponseData<dynamic>> putRequest(
+    String url, {
+    Map<String, dynamic>? body,
+  }) {
     return _sendRequest(url: url, method: 'PUT', body: body);
   }
 
-  Future<ResponseData<dynamic>> patchRequest(String url, {Map<String, dynamic>? body}) {
+  Future<ResponseData<dynamic>> patchRequest(
+    String url, {
+    Map<String, dynamic>? body,
+  }) {
     return _sendRequest(url: url, method: 'PATCH', body: body);
   }
 
@@ -207,7 +313,7 @@ class NetworkCaller {
     required String fileFieldName,
     required String filePath,
   }) async {
-    if (!await _isConnected()) {
+    if (!await _connectivityCheck()) {
       return ResponseData.failure(error: AppError.noInternet);
     }
 
@@ -215,19 +321,24 @@ class NetworkCaller {
       final headers = await _getHeaders();
       final uri = Uri.parse(url);
       final request = http.MultipartRequest('POST', uri);
-      
+
       request.headers.addAll({
         'Accept': 'application/json',
-        if (headers.containsKey('Authorization')) 'Authorization': headers['Authorization']!,
+        if (headers.containsKey('Authorization'))
+          'Authorization': headers['Authorization']!,
       });
-      
+
       request.fields.addAll(fields);
-      request.files.add(await http.MultipartFile.fromPath(fileFieldName, filePath));
+      request.files.add(
+        await http.MultipartFile.fromPath(fileFieldName, filePath),
+      );
 
       AppLogger.logInfo('Uploading to: $url');
-      final streamedResponse = await request.send().timeout(Duration(seconds: _timeoutSeconds));
+      final streamedResponse = await _client
+          .send(request)
+          .timeout(Duration(seconds: _timeoutSeconds));
       final response = await http.Response.fromStream(streamedResponse);
-      
+
       return _handleResponse(response);
     } catch (e) {
       AppLogger.logError('Upload error', e);

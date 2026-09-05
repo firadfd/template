@@ -1,3 +1,29 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+  "java.configuration.updateBuildConfiguration": "interactive",
+
+  // Format-on-save, matching `dart format` and the page_width in
+  // analysis_options.yaml. This is the editor half of the lint/format setup;
+  // tool/pre-commit.sh and CI enforce the same rules.
+  "[dart]": {
+    "editor.defaultFormatter": "Dart-Code.dart-code",
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.rulers": [80],
+    "editor.selectionHighlight": false,
+    "editor.tabCompletion": "onlySnippets",
+    "editor.wordBasedSuggestions": "off"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "dart.lineLength": 80,
+  "dart.previewFlutterUiGuides": true,
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "search.exclude": {
+    "**/*.g.dart": true,
+    "**/*.freezed.dart": true,
+    "**/build": true
+  }
 }

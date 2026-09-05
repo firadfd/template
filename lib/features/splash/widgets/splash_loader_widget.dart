@@ -8,7 +8,11 @@ class SplashLoaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final indicatorSize = getValue<double>(mobile: AppDimensions.iconXXL, tablet: 48, desktop: 56);
+    final indicatorSize = getValue<double>(
+      mobile: AppDimensions.iconXXL,
+      tablet: 48,
+      desktop: 56,
+    );
     return SizedBox(
       width: indicatorSize.r,
       height: indicatorSize.r,

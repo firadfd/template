@@ -4,9 +4,10 @@ import 'package:get/get.dart';
 
 import '../../../../core/core.dart';
 import '../controller/login_controller.dart';
-import '../widgets/login_header_widget.dart';
-import '../widgets/login_form_widget.dart';
 import '../widgets/login_footer_widget.dart';
+import '../widgets/login_form_widget.dart';
+import '../widgets/login_header_widget.dart';
+import '../widgets/mock_auth_notice.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -15,7 +16,11 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<LoginController>();
     // On tablet/desktop: constrain the form to a card-like column
-    final maxWidth = getValue<double>(mobile: double.infinity, tablet: 480, desktop: 520);
+    final maxWidth = getValue<double>(
+      mobile: double.infinity,
+      tablet: 480,
+      desktop: 520,
+    );
 
     return Scaffold(
       backgroundColor: context.appColors.background,
@@ -30,17 +35,21 @@ class LoginScreen extends StatelessWidget {
               children: [
                 SizedBox(height: AppDimensions.spaceHuge.h),
                 const LoginHeaderWidget(),
-                SizedBox(height: AppDimensions.spaceHuge.h),
+                SizedBox(height: AppDimensions.spaceL.h),
+                const MockAuthNotice(),
+                SizedBox(height: AppDimensions.spaceXL.h),
                 LoginFormWidget(
                   emailController: controller.emailController,
                   passwordController: controller.passwordController,
                 ),
                 SizedBox(height: AppDimensions.spaceXXL.h),
-                Obx(() => CustomButton(
-                      text: AppStrings.login.tr,
-                      isLoading: controller.isLoading.value,
-                      onPressed: controller.login,
-                    )),
+                Obx(
+                  () => CustomButton(
+                    text: AppStrings.login.tr,
+                    isLoading: controller.isLoading.value,
+                    onPressed: controller.login,
+                  ),
+                ),
                 SizedBox(height: AppDimensions.spaceXL.h),
                 const Center(child: LoginFooterWidget()),
                 SizedBox(height: AppDimensions.spaceHuge.h),

@@ -19,21 +19,11 @@ class ResponseData<T> {
 
   // ─── Named constructors ───────────────────────────────────────────────────
 
-  factory ResponseData.success({
-    required int statusCode,
-    T? data,
-  }) {
-    return ResponseData<T>(
-      isSuccess: true,
-      statusCode: statusCode,
-      data: data,
-    );
+  factory ResponseData.success({required int statusCode, T? data}) {
+    return ResponseData<T>(isSuccess: true, statusCode: statusCode, data: data);
   }
 
-  factory ResponseData.failure({
-    required AppError error,
-    int statusCode = 0,
-  }) {
+  factory ResponseData.failure({required AppError error, int statusCode = 0}) {
     return ResponseData<T>(
       isSuccess: false,
       statusCode: statusCode,
@@ -69,9 +59,15 @@ class ResponseData<T> {
   /// Map this response to a different data type.
   ResponseData<R> mapData<R>(R Function(T data) mapper) {
     if (isSuccess && data != null) {
-      return ResponseData<R>.success(statusCode: statusCode, data: mapper(data as T));
+      return ResponseData<R>.success(
+        statusCode: statusCode,
+        data: mapper(data as T),
+      );
     }
-    return ResponseData<R>.failure(error: error ?? AppError.unknown, statusCode: statusCode);
+    return ResponseData<R>.failure(
+      error: error ?? AppError.unknown,
+      statusCode: statusCode,
+    );
   }
 
   @override

@@ -1,24 +1,23 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import '../../home/view/home_screen.dart';
+import '../../../core/core.dart';
 import '../../profile/view/profile_screen.dart';
 
 class MainController extends GetxController {
-  // Current Bottom Navigation Index
+  /// Current bottom-navigation / rail index.
   final currentIndex = 0.obs;
 
-  // Reduced the screen list to Home and Profile only, matching the simplified navigation
-  final List<Widget> screens = [
-    const HomeScreen(),
-    const HomeScreen(),
-    const HomeScreen(),
-    const HomeScreen(),
-    const ProfileScreen(),
+  /// Tab destinations. Swap each [PlaceholderView] for your own feature screen;
+  /// keep this list in the same order as the items in [MainBottomNavBar] and
+  /// [MainNavigationRail].
+  final List<Widget> screens = const [
+    PlaceholderView(title: 'Home', icon: Icons.home_rounded),
+    PlaceholderView(title: 'Explore', icon: Icons.explore_rounded),
+    PlaceholderView(title: 'Alerts', icon: Icons.notifications_rounded),
+    PlaceholderView(title: 'Saved', icon: Icons.bookmark_rounded),
+    ProfileScreen(),
   ];
 
-  // Logic for switching tabs
-  void changeTabIndex(int index) {
-    currentIndex.value = index;
-  }
+  void changeTabIndex(int index) => currentIndex.value = index;
 }

@@ -11,11 +11,7 @@ class AppError {
   /// (e.g., 'INVALID_CREDENTIALS', 'TOKEN_EXPIRED', 'NO_INTERNET').
   final String? errorCode;
 
-  const AppError({
-    required this.message,
-    this.statusCode,
-    this.errorCode,
-  });
+  const AppError({required this.message, this.statusCode, this.errorCode});
 
   // ─── Pre-defined common errors ────────────────────────────────────────────
 
@@ -47,21 +43,49 @@ class AppError {
   factory AppError.fromStatusCode(int statusCode, {String? message}) {
     switch (statusCode) {
       case 400:
-        return AppError(message: message ?? 'Invalid request.', statusCode: 400, errorCode: 'BAD_REQUEST');
+        return AppError(
+          message: message ?? 'Invalid request.',
+          statusCode: 400,
+          errorCode: 'BAD_REQUEST',
+        );
       case 401:
-        return AppError(message: message ?? 'Unauthorized.', statusCode: 401, errorCode: 'UNAUTHORIZED');
+        return AppError(
+          message: message ?? 'Unauthorized.',
+          statusCode: 401,
+          errorCode: 'UNAUTHORIZED',
+        );
       case 403:
-        return AppError(message: message ?? 'Access denied.', statusCode: 403, errorCode: 'FORBIDDEN');
+        return AppError(
+          message: message ?? 'Access denied.',
+          statusCode: 403,
+          errorCode: 'FORBIDDEN',
+        );
       case 404:
-        return AppError(message: message ?? 'Resource not found.', statusCode: 404, errorCode: 'NOT_FOUND');
+        return AppError(
+          message: message ?? 'Resource not found.',
+          statusCode: 404,
+          errorCode: 'NOT_FOUND',
+        );
       case 408:
         return AppError.timeout;
       case 422:
-        return AppError(message: message ?? 'Validation failed.', statusCode: 422, errorCode: 'VALIDATION');
+        return AppError(
+          message: message ?? 'Validation failed.',
+          statusCode: 422,
+          errorCode: 'VALIDATION',
+        );
       case 500:
-        return AppError(message: message ?? 'Server error.', statusCode: 500, errorCode: 'SERVER_ERROR');
+        return AppError(
+          message: message ?? 'Server error.',
+          statusCode: 500,
+          errorCode: 'SERVER_ERROR',
+        );
       default:
-        return AppError(message: message ?? 'Request failed.', statusCode: statusCode, errorCode: 'HTTP_$statusCode');
+        return AppError(
+          message: message ?? 'Request failed.',
+          statusCode: statusCode,
+          errorCode: 'HTTP_$statusCode',
+        );
     }
   }
 
@@ -80,5 +104,6 @@ class AppError {
   }
 
   @override
-  String toString() => 'AppError(code: $errorCode, status: $statusCode, message: $message)';
+  String toString() =>
+      'AppError(code: $errorCode, status: $statusCode, message: $message)';
 }

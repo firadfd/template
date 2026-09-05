@@ -29,11 +29,7 @@ class SplashLogoWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: Icon(
-        Icons.rocket_launch_rounded,
-        size: 60.r,
-        color: Colors.white,
-      ),
+      child: Icon(Icons.rocket_launch_rounded, size: 60.r, color: Colors.white),
     );
   }
 }

@@ -14,7 +14,11 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final maxWidth = getValue<double>(mobile: double.infinity, tablet: 640, desktop: 720);
+    final maxWidth = getValue<double>(
+      mobile: double.infinity,
+      tablet: 640,
+      desktop: 720,
+    );
 
     return SingleChildScrollView(
       padding: EdgeInsets.all(AppDimensions.paddingL.r),
@@ -35,7 +39,7 @@ class ProfileScreen extends StatelessWidget {
                 textColor: colors.error,
                 onPressed: () async {
                   await Get.find<StorageService>().clearAuth();
-                  Get.offAllNamed(AppRoutes.login);
+                  await Get.offAllNamed<void>(AppRoutes.login);
                 },
               ),
             ],

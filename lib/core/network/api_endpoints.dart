@@ -8,7 +8,5 @@ class ApiEndpoints {
   // ─── Auth ─────────────────────────────────────────────────────────────────
   static String get refreshToken => '$baseUrl/auth/refresh';
   static String get loginEndpoint => '$baseUrl/auth/login';
-
-  // ─── Home ─────────────────────────────────────────────────────────────────
-  static String get posts => '$baseUrl/posts';
+  static String get logoutEndpoint => '$baseUrl/auth/logout';
 }

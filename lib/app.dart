@@ -1,7 +1,6 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'bindings/app_binding.dart';
@@ -35,13 +34,11 @@ class MyApp extends StatelessWidget {
       _ => const Locale('en', 'US'),
     };
 
-    // ✅ Use a universal design size that works well across all screen sizes.
-    // ScreenUtil will scale from this baseline to match any device.
+    // A universal design baseline; ScreenUtil scales from it to any device.
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
-      useInheritedMediaQuery: true,
       builder: (context, child) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
@@ -50,7 +47,7 @@ class MyApp extends StatelessWidget {
           darkTheme: darkThemeData(),
           themeMode: initialTheme,
           translations: AppTranslations(),
-          locale: DevicePreview.locale(context) ?? initialLocale,
+          locale: initialLocale,
           fallbackLocale: const Locale('en', 'US'),
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
@@ -63,9 +60,8 @@ class MyApp extends StatelessWidget {
             Locale('bn', 'BD'),
           ],
           builder: (context, child) {
-            final previewChild = DevicePreview.appBuilder(context, child);
             AppSizeClass.init(context);
-            return previewChild;
+            return child!;
           },
           initialBinding: AppBinding(),
           initialRoute: AppRoutes.splash,

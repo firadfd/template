@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import '../utils/app_size_class.dart';
+
 import '../theme/app_dimensions.dart';
+import '../utils/app_size_class.dart';
 
 class SkeletonItem extends StatelessWidget {
   const SkeletonItem({super.key});
@@ -23,17 +24,9 @@ class SkeletonItem extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 24,
-                  ),
+                  const CircleAvatar(backgroundColor: Colors.white, radius: 24),
                   SizedBox(width: getWidth(AppDimensions.spaceM)),
-                  Expanded(
-                    child: Container(
-                      height: 16,
-                      color: Colors.white,
-                    ),
-                  ),
+                  Expanded(child: Container(height: 16, color: Colors.white)),
                 ],
               ),
               SizedBox(height: getHeight(AppDimensions.spaceM)),
@@ -43,11 +36,7 @@ class SkeletonItem extends StatelessWidget {
                 color: Colors.white,
               ),
               SizedBox(height: getHeight(AppDimensions.spaceS)),
-              Container(
-                height: 12,
-                width: 200,
-                color: Colors.white,
-              ),
+              Container(height: 12, width: 200, color: Colors.white),
             ],
           ),
         ),
@@ -69,7 +58,8 @@ class SkeletonListView extends StatelessWidget {
         vertical: getHeight(AppDimensions.paddingL),
       ),
       itemCount: itemCount,
-      separatorBuilder: (context, index) => SizedBox(height: getHeight(AppDimensions.spaceM)),
+      separatorBuilder: (context, index) =>
+          SizedBox(height: getHeight(AppDimensions.spaceM)),
       itemBuilder: (context, index) => const SkeletonItem(),
     );
   }

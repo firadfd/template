@@ -33,41 +33,69 @@ class ProfileSettingsSectionWidget extends StatelessWidget {
         _ProfileSettingCard(
           icon: Icons.brightness_6_rounded,
           title: AppStrings.theme.tr,
-          child: Obx(() => DropdownButton<String>(
-                value: SettingsUtil.currentTheme.value,
-                icon: Icon(Icons.keyboard_arrow_down_rounded, color: colors.primary),
-                underline: const SizedBox(),
-                borderRadius: BorderRadius.circular(AppDimensions.radiusL.r),
-                dropdownColor: Theme.of(context).cardColor,
-                items: [
-                  DropdownMenuItem(value: 'system', child: CustomText(text: AppStrings.themeAuto.tr)),
-                  DropdownMenuItem(value: 'light', child: CustomText(text: AppStrings.themeLight.tr)),
-                  DropdownMenuItem(value: 'dark', child: CustomText(text: AppStrings.themeDark.tr)),
-                ],
-                onChanged: (String? theme) {
-                  if (theme != null) SettingsUtil.changeTheme(theme);
-                },
-              )),
+          child: Obx(
+            () => DropdownButton<String>(
+              value: SettingsUtil.currentTheme.value,
+              icon: Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: colors.primary,
+              ),
+              underline: const SizedBox(),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusL.r),
+              dropdownColor: Theme.of(context).cardColor,
+              items: [
+                DropdownMenuItem(
+                  value: 'system',
+                  child: CustomText(text: AppStrings.themeAuto.tr),
+                ),
+                DropdownMenuItem(
+                  value: 'light',
+                  child: CustomText(text: AppStrings.themeLight.tr),
+                ),
+                DropdownMenuItem(
+                  value: 'dark',
+                  child: CustomText(text: AppStrings.themeDark.tr),
+                ),
+              ],
+              onChanged: (String? theme) {
+                if (theme != null) SettingsUtil.changeTheme(theme);
+              },
+            ),
+          ),
         ),
         SizedBox(height: AppDimensions.spaceL.h),
         _ProfileSettingCard(
           icon: Icons.language_rounded,
           title: AppStrings.language.tr,
-          child: Obx(() => DropdownButton<String>(
-                value: SettingsUtil.currentLanguage.value,
-                icon: Icon(Icons.keyboard_arrow_down_rounded, color: colors.primary),
-                underline: const SizedBox(),
-                borderRadius: BorderRadius.circular(AppDimensions.radiusL.r),
-                dropdownColor: Theme.of(context).cardColor,
-                items: [
-                  DropdownMenuItem(value: 'en', child: CustomText(text: AppStrings.langEn.tr)),
-                  DropdownMenuItem(value: 'ar', child: CustomText(text: AppStrings.langAr.tr)),
-                  DropdownMenuItem(value: 'bn', child: CustomText(text: AppStrings.langBn.tr)),
-                ],
-                onChanged: (String? lang) {
-                  if (lang != null) SettingsUtil.changeLanguage(lang);
-                },
-              )),
+          child: Obx(
+            () => DropdownButton<String>(
+              value: SettingsUtil.currentLanguage.value,
+              icon: Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: colors.primary,
+              ),
+              underline: const SizedBox(),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusL.r),
+              dropdownColor: Theme.of(context).cardColor,
+              items: [
+                DropdownMenuItem(
+                  value: 'en',
+                  child: CustomText(text: AppStrings.langEn.tr),
+                ),
+                DropdownMenuItem(
+                  value: 'ar',
+                  child: CustomText(text: AppStrings.langAr.tr),
+                ),
+                DropdownMenuItem(
+                  value: 'bn',
+                  child: CustomText(text: AppStrings.langBn.tr),
+                ),
+              ],
+              onChanged: (String? lang) {
+                if (lang != null) SettingsUtil.changeLanguage(lang);
+              },
+            ),
+          ),
         ),
       ],
     );
@@ -108,7 +136,11 @@ class _ProfileSettingCard extends StatelessWidget {
               color: colors.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(AppDimensions.radiusM.r),
             ),
-            child: Icon(icon, color: colors.primary, size: AppDimensions.radiusXXL.r),
+            child: Icon(
+              icon,
+              color: colors.primary,
+              size: AppDimensions.radiusXXL.r,
+            ),
           ),
           SizedBox(width: AppDimensions.spaceL.w),
           Expanded(

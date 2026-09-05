@@ -9,7 +9,8 @@ const Map<String, String> enUS = {
 
   // Onboarding
   'onboarding_welcome': 'Welcome to Flutter Template',
-  'onboarding_desc': 'The ultimate starter kit for high-performance apps. Build faster, scale further.',
+  'onboarding_desc':
+      'The ultimate starter kit for high-performance apps. Build faster, scale further.',
   'get_started': 'Get Started',
 
   // Login
@@ -18,7 +19,7 @@ const Map<String, String> enUS = {
   'email_hint': 'Email Address',
   'password_hint': 'Password',
   'login': 'Sign In',
-  'no_account': "New here?",
+  'no_account': 'New here?',
   'sign_up': 'Create Account',
   'login_error': 'Authentication Failed',
   'fill_fields': 'Please provide all required information',

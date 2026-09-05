@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 
 import '../../../core/core.dart';
 import '../controller/main_controller.dart';
+import '../widgets/main_app_bar.dart';
 import '../widgets/main_bottom_nav_bar.dart';
 import '../widgets/main_navigation_rail.dart';
-import '../widgets/main_app_bar.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../utils/app_size_class.dart';
+
 import '../theme/app_colors.dart';
+import '../utils/app_size_class.dart';
 
 class CustomLoader extends StatelessWidget {
   final double? size;

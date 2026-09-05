@@ -1,32 +1,84 @@
+# Static analysis + formatting config.
+#
+# This is the Dart equivalent of an ESLint + Prettier setup:
+#   - `dart analyze`  -> the linter (rules below, plus the type checks)
+#   - `dart format`   -> the formatter (page_width below)
+# Both are enforced in CI and by the pre-commit hook in tool/pre-commit.sh.
+#
+# Run locally:
+#   dart format --set-exit-if-changed .
+#   flutter analyze --fatal-infos --fatal-warnings
+
 include: package:flutter_lints/flutter.yaml
 
-linter:
-  rules:
-    # ─── Clean Architecture & Style Rules ─────────────────────────────────────
-    
-    # Ensures consistent import style. Relative imports are easier to move.
-    prefer_relative_imports: true
-    
-    # Prevents accidental production logs. Use AppLogger instead.
-    avoid_print: true
-    
-    # Encourages explicit typing for better readability and compiler optimization.
-    always_specify_types: false # Keep false for brief code, but consider true for strictness.
-    omit_local_variable_types: true
-    
-    # Security & Performance
-    use_key_in_widget_constructors: true
-    prefer_const_constructors: true
-    prefer_const_literals_to_create_immutables: true
-    
-    # Code Quality
-    unnecessary_await_in_return: true
-    unnecessary_parenthesis: true
-    sort_pub_dependencies: true
-    
+formatter:
+  page_width: 80
+
 analyzer:
+  language:
+    # Reject implicit downcasts from dynamic; forces explicit, checked casts
+    # at the JSON boundary instead of blowing up deep in the widget tree.
+    strict-casts: true
+    strict-raw-types: true
+    # strict-inference stays off: it almost exclusively flags GetX's own
+    # un-inferrable generics (Get.offAllNamed, GetPage), not app code.
+    strict-inference: false
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
   errors:
     invalid_annotation_target: ignore
+    # Anything the linter flags should fail the build, not scroll past.
+    todo: info
+
+linter:
+  rules:
+    # ─── Correctness ──────────────────────────────────────────────────────────
+    always_declare_return_types: true
+    avoid_empty_else: true
+    avoid_slow_async_io: true
+    avoid_type_to_string: true
+    cancel_subscriptions: true
+    close_sinks: true
+    collection_methods_unrelated_type: true
+    comment_references: false
+    literal_only_boolean_expressions: true
+    no_adjacent_strings_in_list: true
+    throw_in_finally: true
+    unawaited_futures: true
+    unnecessary_statements: true
+    use_build_context_synchronously: true
+
+    # ─── Security & production hygiene ────────────────────────────────────────
+    # Use AppLogger instead; print() ships to release builds.
+    avoid_print: true
+    avoid_web_libraries_in_flutter: true
+    secure_pubspec_urls: true
+
+    # ─── Style / consistency ──────────────────────────────────────────────────
+    always_use_package_imports: false
+    prefer_relative_imports: true
+    directives_ordering: true
+    curly_braces_in_flow_control_structures: true
+    omit_local_variable_types: true
+    prefer_final_locals: true
+    prefer_single_quotes: true
+    sort_pub_dependencies: true
+    unnecessary_parenthesis: true
+    unnecessary_await_in_return: true
+    use_named_constants: true
+    use_super_parameters: true
+
+    # ─── Flutter widget hygiene ───────────────────────────────────────────────
+    prefer_const_constructors: true
+    prefer_const_constructors_in_immutables: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
+    sized_box_for_whitespace: true
+    use_colored_box: true
+    use_decorated_box: true
+    use_key_in_widget_constructors: true

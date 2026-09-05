@@ -10,77 +10,77 @@ class AppColors {
 
   // ── Brand / Primary ─────────────────────────────────────────────────────────
   /// Vivid Indigo — primary brand color
-  static const Color primaryLight = Color(0xFF5C6BC0);  // Indigo 400
-  static const Color primaryDark  = Color(0xFF7986CB);  // Indigo 300
+  static const Color primaryLight = Color(0xFF5C6BC0); // Indigo 400
+  static const Color primaryDark = Color(0xFF7986CB); // Indigo 300
 
   static const Color primaryVariantLight = Color(0xFF3949AB); // Indigo 600
-  static const Color primaryVariantDark  = Color(0xFF5C6BC0); // Indigo 400
+  static const Color primaryVariantDark = Color(0xFF5C6BC0); // Indigo 400
 
   // ── Secondary / Accent ──────────────────────────────────────────────────────
   static const Color secondaryLight = Color(0xFF26C6DA); // Cyan 400
-  static const Color secondaryDark  = Color(0xFF4DD0E1); // Cyan 300
+  static const Color secondaryDark = Color(0xFF4DD0E1); // Cyan 300
 
   static const Color secondaryVariantLight = Color(0xFF00ACC1); // Cyan 600
-  static const Color secondaryVariantDark  = Color(0xFF26C6DA); // Cyan 400
+  static const Color secondaryVariantDark = Color(0xFF26C6DA); // Cyan 400
 
   // ── Backgrounds ─────────────────────────────────────────────────────────────
   static const Color backgroundLight = Color(0xFFF5F6FA);
-  static const Color backgroundDark  = Color(0xFF0F1117);
+  static const Color backgroundDark = Color(0xFF0F1117);
 
   // ── Surface (cards, sheets, bottom bars) ────────────────────────────────────
-  static const Color surfaceLight        = Color(0xFFFFFFFF);
-  static const Color surfaceDark         = Color(0xFF1A1D2B);
+  static const Color surfaceLight = Color(0xFFFFFFFF);
+  static const Color surfaceDark = Color(0xFF1A1D2B);
 
   static const Color surfaceVariantLight = Color(0xFFEEEFF5);
-  static const Color surfaceVariantDark  = Color(0xFF252838);
+  static const Color surfaceVariantDark = Color(0xFF252838);
 
   // ── Elevated surface (dialog, elevated card) ────────────────────────────────
   static const Color elevatedSurfaceLight = Color(0xFFFFFFFF);
-  static const Color elevatedSurfaceDark  = Color(0xFF21253A);
+  static const Color elevatedSurfaceDark = Color(0xFF21253A);
 
   // ── AppBar ──────────────────────────────────────────────────────────────────
   static const Color appBarLight = Color(0xFF5C6BC0);
-  static const Color appBarDark  = Color(0xFF1A1D2B);
+  static const Color appBarDark = Color(0xFF1A1D2B);
 
   // ── Border / Divider / Outline ──────────────────────────────────────────────
   static const Color borderLight = Color(0xFFDDE0EF);
-  static const Color borderDark  = Color(0xFF2E3350);
+  static const Color borderDark = Color(0xFF2E3350);
 
   static const Color outlineLight = Color(0xFFCFD2E2);
-  static const Color outlineDark  = Color(0xFF323955);
+  static const Color outlineDark = Color(0xFF323955);
 
   static const Color dividerLight = Color(0xFFE8EAEF);
-  static const Color dividerDark  = Color(0xFF2A2E45);
+  static const Color dividerDark = Color(0xFF2A2E45);
 
   // ── Text ─────────────────────────────────────────────────────────────────────
-  static const Color textPrimaryLight   = Color(0xFF1A1D2B);
-  static const Color textPrimaryDark    = Color(0xFFF0F1F7);
+  static const Color textPrimaryLight = Color(0xFF1A1D2B);
+  static const Color textPrimaryDark = Color(0xFFF0F1F7);
 
   static const Color textSecondaryLight = Color(0xFF5C637A);
-  static const Color textSecondaryDark  = Color(0xFF9499B5);
+  static const Color textSecondaryDark = Color(0xFF9499B5);
 
-  static const Color textHintLight      = Color(0xFFA0A4BA);
-  static const Color textHintDark       = Color(0xFF60647A);
+  static const Color textHintLight = Color(0xFFA0A4BA);
+  static const Color textHintDark = Color(0xFF60647A);
 
   // ── Status ───────────────────────────────────────────────────────────────────
   static const Color successLight = Color(0xFF2E7D32); // Green 800
-  static const Color successDark  = Color(0xFF66BB6A); // Green 400
+  static const Color successDark = Color(0xFF66BB6A); // Green 400
 
   static const Color warningLight = Color(0xFFF57F17); // Amber 900
-  static const Color warningDark  = Color(0xFFFFCA28); // Amber 400
+  static const Color warningDark = Color(0xFFFFCA28); // Amber 400
 
-  static const Color errorLight   = Color(0xFFB71C1C); // Red 900
-  static const Color errorDark    = Color(0xFFEF5350); // Red 400
+  static const Color errorLight = Color(0xFFB71C1C); // Red 900
+  static const Color errorDark = Color(0xFFEF5350); // Red 400
 
-  static const Color infoLight    = Color(0xFF0277BD); // Light Blue 800
-  static const Color infoDark     = Color(0xFF29B6F6); // Light Blue 400
+  static const Color infoLight = Color(0xFF0277BD); // Light Blue 800
+  static const Color infoDark = Color(0xFF29B6F6); // Light Blue 400
 
   // ── Overlay / Scrim ──────────────────────────────────────────────────────────
   static const Color overlayLight = Color(0x1A5C6BC0); // primary 10 %
-  static const Color overlayDark  = Color(0x1A7986CB); // primary 10 %
+  static const Color overlayDark = Color(0x1A7986CB); // primary 10 %
 
-  static const Color scrimLight   = Color(0x805C6BC0);
-  static const Color scrimDark    = Color(0x80000000);
+  static const Color scrimLight = Color(0x805C6BC0);
+  static const Color scrimDark = Color(0x80000000);
 
   // ── Gradient helpers ─────────────────────────────────────────────────────────
   static const LinearGradient primaryGradientLight = LinearGradient(
@@ -256,13 +256,15 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
       primary: Color.lerp(primary, other.primary, t)!,
       primaryVariant: Color.lerp(primaryVariant, other.primaryVariant, t)!,
       secondary: Color.lerp(secondary, other.secondary, t)!,
-      secondaryVariant:
-          Color.lerp(secondaryVariant, other.secondaryVariant, t)!,
+      secondaryVariant: Color.lerp(
+        secondaryVariant,
+        other.secondaryVariant,
+        t,
+      )!,
       background: Color.lerp(background, other.background, t)!,
       surface: Color.lerp(surface, other.surface, t)!,
       surfaceVariant: Color.lerp(surfaceVariant, other.surfaceVariant, t)!,
-      elevatedSurface:
-          Color.lerp(elevatedSurface, other.elevatedSurface, t)!,
+      elevatedSurface: Color.lerp(elevatedSurface, other.elevatedSurface, t)!,
       appBar: Color.lerp(appBar, other.appBar, t)!,
       border: Color.lerp(border, other.border, t)!,
       outline: Color.lerp(outline, other.outline, t)!,

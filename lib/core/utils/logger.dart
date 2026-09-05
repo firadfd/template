@@ -19,7 +19,11 @@ class AppLogger {
     }
   }
 
-  static void logError(String message, [dynamic error, StackTrace? stackTrace]) {
+  static void logError(
+    String message, [
+    dynamic error,
+    StackTrace? stackTrace,
+  ]) {
     if (kDebugMode) {
       _logger.e(message, error: error, stackTrace: stackTrace);
     }

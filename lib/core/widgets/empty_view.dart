@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../utils/app_size_class.dart';
+
 import '../theme/app_colors.dart';
+import '../utils/app_size_class.dart';
 import 'custom_text.dart';
 
 class EmptyView extends StatelessWidget {
@@ -19,11 +20,7 @@ class EmptyView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: getRadius(80),
-            color: context.appColors.textHint,
-          ),
+          Icon(icon, size: getRadius(80), color: context.appColors.textHint),
           SizedBox(height: getHeight(16)),
           CustomText(
             text: message,

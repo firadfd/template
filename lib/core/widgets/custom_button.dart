@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../utils/app_size_class.dart';
+
 import '../theme/app_colors.dart';
 import '../theme/app_dimensions.dart';
+import '../utils/app_size_class.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -32,7 +33,9 @@ class CustomButton extends StatelessWidget {
           backgroundColor: color ?? context.appColors.primary,
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(getRadius(AppDimensions.radiusM)),
+            borderRadius: BorderRadius.circular(
+              getRadius(AppDimensions.radiusM),
+            ),
           ),
         ),
         child: isLoading
@@ -48,7 +51,11 @@ class CustomButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (icon != null) ...[
-                    Icon(icon, color: textColor ?? Colors.white, size: getRadius(AppDimensions.iconM)),
+                    Icon(
+                      icon,
+                      color: textColor ?? Colors.white,
+                      size: getRadius(AppDimensions.iconM),
+                    ),
                     SizedBox(width: getWidth(AppDimensions.spaceS)),
                   ],
                   Text(

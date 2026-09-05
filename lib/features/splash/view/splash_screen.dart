@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 
 import '../../../core/core.dart';
 import '../controller/splash_controller.dart';
+import '../widgets/splash_loader_widget.dart';
 import '../widgets/splash_logo_widget.dart';
 import '../widgets/splash_text_widget.dart';
-import '../widgets/splash_loader_widget.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

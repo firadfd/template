@@ -12,18 +12,9 @@ double getWidth(double size) => AppSizeClass.instance.getWidth(size);
 double getSp(double size) => AppSizeClass.instance.getSp(size);
 double getRadius(double size) => AppSizeClass.instance.getRadius(size);
 
-T getValue<T>({
-  required T mobile,
-  T? tablet,
-  T? desktop,
-  T? tv,
-}) =>
-    AppSizeClass.instance.getValue(
-      mobile: mobile,
-      tablet: tablet,
-      desktop: desktop,
-      tv: tv,
-    );
+T getValue<T>({required T mobile, T? tablet, T? desktop, T? tv}) => AppSizeClass
+    .instance
+    .getValue(mobile: mobile, tablet: tablet, desktop: desktop, tv: tv);
 
 /// Global screen utility getters
 double get sWidth => AppSizeClass.instance.screenWidth;
@@ -54,11 +45,14 @@ class AppSizeClass {
 
   /// The global singleton instance.
   static AppSizeClass get instance {
-    assert(_instance != null, 'AppSizeClass must be initialized by calling AppSizeClass.init(context) in your App build method.');
+    assert(
+      _instance != null,
+      'AppSizeClass must be initialized by calling AppSizeClass.init(context) in your App build method.',
+    );
     return _instance!;
   }
 
-  /// Initialize the responsive system. 
+  /// Initialize the responsive system.
   /// Should be called in the build method of your main App widget.
   static void init(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -105,12 +99,7 @@ class AppSizeClass {
   double getHeight(double size) => size.h;
   double getRadius(double size) => size.r;
 
-  T getValue<T>({
-    required T mobile,
-    T? tablet,
-    T? desktop,
-    T? tv,
-  }) {
+  T getValue<T>({required T mobile, T? tablet, T? desktop, T? tv}) {
     switch (screenType) {
       case ScreenType.tv:
         return tv ?? desktop ?? tablet ?? mobile;
@@ -125,17 +114,17 @@ class AppSizeClass {
 
   double get maxContentWidth {
     switch (screenType) {
-      case ScreenType.mobile: return screenWidth;
-      case ScreenType.tablet: return 720;
-      case ScreenType.desktop: return 1024;
-      case ScreenType.tv: return 1400;
+      case ScreenType.mobile:
+        return screenWidth;
+      case ScreenType.tablet:
+        return 720;
+      case ScreenType.desktop:
+        return 1024;
+      case ScreenType.tv:
+        return 1400;
     }
   }
 
-  double get horizontalPadding => getValue<double>(
-        mobile: 16,
-        tablet: 32,
-        desktop: 48,
-        tv: 64,
-      );
+  double get horizontalPadding =>
+      getValue<double>(mobile: 16, tablet: 32, desktop: 48, tv: 64);
 }

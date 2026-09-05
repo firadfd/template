@@ -15,12 +15,14 @@ class LoginController extends GetxController {
   final passwordController = TextEditingController();
 
   final isLoading = false.obs;
+
   Future<void> login() async {
     if (emailController.text.trim().isEmpty ||
         passwordController.text.isEmpty) {
       _showSnackbar(AppStrings.loginError.tr, AppStrings.fillFields.tr);
       return;
     }
+
     isLoading.value = true;
 
     try {
@@ -29,19 +31,19 @@ class LoginController extends GetxController {
         password: passwordController.text,
       );
 
-      if (!response.isSuccess) {
+      final tokens = response.data;
+      if (!response.isSuccess || tokens == null) {
         _showSnackbar(AppStrings.error.tr, response.errorMessage);
         return;
       }
 
-      final data = response.data;
       await _storageService.saveTokens(
-        accessToken: data['access_token'],
-        refreshToken: data['refresh_token'],
-        expiresIn: data['expires_in'],
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+        expiresIn: tokens.expiresIn,
       );
 
-      Get.offAllNamed(AppRoutes.main);
+      await Get.offAllNamed<void>(AppRoutes.main);
     } catch (e) {
       _showSnackbar(AppStrings.error.tr, e.toString());
     } finally {
@@ -50,7 +52,11 @@ class LoginController extends GetxController {
   }
 
   void _showSnackbar(String title, String message) {
-    AppSnackbar.error(title: title, message: message,position: SnackbarPosition.bottom);
+    AppSnackbar.error(
+      title: title,
+      message: message,
+      position: SnackbarPosition.bottom,
+    );
   }
 
   @override

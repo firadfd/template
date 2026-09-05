@@ -25,13 +25,23 @@ lib/
 ├── features/                       # Modular business logic features
 │   ├── splash/                     # Navigation & Auth logic hub
 │   ├── onboarding/                 # First-time user experience
-│   ├── auth/                       # Login & Registration modules
+│   ├── auth/                       # Login flow: the reference vertical slice
 │   ├── main/                       # Bottom Navigation & Rail hub
-│   └── home/                       # Feature-specific Repository, Binding, and Controller
+│   └── profile/                    # Settings, language, theme, logout
 └── routes/
     ├── app_pages.dart              # Route mappings with Feature Bindings
     └── app_routes.dart             # Static route URL constants
+
+tool/
+└── pre-commit.sh                   # format -> analyze -> test gate
 ```
+
+The `auth` feature is the reference implementation. It is a complete vertical
+slice — binding -> controller -> repository -> typed model -> view — and it is
+covered by tests. Copy its shape when you add a feature.
+
+The tabs behind the bottom navigation are `PlaceholderView`s. Replace them in
+`lib/features/main/controller/main_controller.dart` with your own screens.
 
 ---
 
@@ -50,7 +60,33 @@ lib/
 
 3. **Launch the App**
    ```bash
-   flutter run
+   flutter run --dart-define=APP_ENV=dev
+   ```
+
+   The environment is chosen at compile time, so a release build cannot
+   accidentally ship pointing at a dev server. Point a build anywhere with
+   `--dart-define=API_BASE_URL=https://...`. Set your real hosts in
+   `lib/core/config/env_config.dart`.
+
+4. **No backend yet? Run with mock auth**
+   ```bash
+   flutter run --dart-define=MOCK_AUTH=true
+   ```
+
+   The login screen calls a real API. Until you have one, this define makes
+   `AuthRepository` issue fake tokens locally, so **any** non-empty email and
+   password signs you in and lands you on the main screen. A banner on the
+   login screen shows when it is active.
+
+   It is ignored when `APP_ENV=prod`, so it cannot ship in a release build.
+
+   To get back to the login screen afterwards, use **Logout** on the Profile
+   tab — the token is persisted, so the splash screen will otherwise send you
+   straight to main on the next launch.
+
+5. **Install the pre-commit hook** (recommended)
+   ```bash
+   ./tool/pre-commit.sh --install
    ```
 
 ---
@@ -95,13 +131,20 @@ flutter pub run rename setAppName --value "Your App Name"
 - **AppSizeClass**: Handles Mobile, Tablet, Desktop, and TV natively.
 - **Context-Free Sizing**: Use `getHeight(100)`, `getSp(16)`, etc., anywhere in your logic or UI.
 
-### 🌐 3. Multi-Environment Support (Flavors)
-- **EnvConfig**: Built-in support for Development, Staging, and Production environments.
-- **Dynamic BaseURLs**: Automatically switches API endpoints based on the active environment.
+### 🌐 3. Multi-Environment Support
+- **EnvConfig**: Development, Staging and Production, selected at compile time
+  via `--dart-define=APP_ENV=`, with an optional `API_BASE_URL` override.
+- Note: these are compile-time environments, not Flutter/Gradle *flavors*. If
+  you need separate application IDs or icons per environment, add real flavors
+  in `android/app/build.gradle` and an Xcode scheme.
 
 ### 📡 4. Pure Network Engine
 - **Decoupled UI**: Network errors are passed back to the caller, allowing the UI to decide how to display them (Snackbar, Dialog, or Error Screen).
-- **Auto-Token Refresh**: Sophisticated JWT refresh logic with recursion guards built-in.
+- **Auto-Token Refresh**: JWT refresh with a recursion guard and *single-flight*
+  de-duplication — concurrent 401s share one refresh, so a backend that rotates
+  refresh tokens will not log the user out.
+- **Injectable**: `NetworkCaller` takes an `http.Client` and a connectivity
+  check, so it is unit-testable without sockets or platform plugins.
 - **Connectivity Guard**: Automatic check for internet connection before every request.
 
 ### 🌍 5. Globalization & RTL
@@ -111,6 +154,49 @@ flutter pub run rename setAppName --value "Your App Name"
 ### 🖥️ 6. Adaptive UI (Mobile & Desktop)
 - **Hybrid Navigation**: Automatically switches between `BottomNavigationBar` and `NavigationRail` based on screen width.
 - **Platform Optimized**: Designed for touch, mouse, and keyboard interactions.
+
+### 🧹 7. Linting & Formatting
+The Dart equivalent of an ESLint + Prettier setup. There is no ESLint or
+Prettier here — those are JavaScript tools and do not run on Dart.
+
+| Concern | Tool | Config |
+| --- | --- | --- |
+| Linting | `dart analyze` | `analysis_options.yaml` (`linter.rules`) |
+| Type strictness | analyzer | `analysis_options.yaml` (`strict-casts`, `strict-raw-types`) |
+| Formatting | `dart format` | `analysis_options.yaml` (`formatter.page_width: 80`) |
+| Editor | Dart-Code | `.vscode/settings.json`, `.editorconfig` |
+| Pre-commit | git hook | `tool/pre-commit.sh` |
+| CI | GitHub Actions | `.github/workflows/flutter_ci.yml` |
+
+```bash
+dart format .                                   # apply formatting
+dart fix --apply                                # auto-fix lint violations
+flutter analyze --fatal-infos --fatal-warnings  # what CI runs
+flutter test                                    # what CI runs
+./tool/pre-commit.sh                            # all of the above
+```
+
+`strict-casts` is on, so unchecked `dynamic` from JSON will not compile. Parse
+at the boundary — see `lib/features/auth/model/auth_tokens.dart` for the
+pattern.
+
+**Code generation** is not preinstalled, because nothing in the template needs
+it. When you add your first generated model, pull it in with one command:
+
+```bash
+flutter pub add json_annotation dev:build_runner dev:json_serializable
+# or, for freezed unions/copyWith:
+flutter pub add freezed_annotation dev:build_runner dev:freezed
+```
+
+`analysis_options.yaml` already excludes `*.g.dart` and `*.freezed.dart`, so
+generated files stay out of the linter and the formatter.
+
+### ✅ 8. Tested & Gated
+`flutter test` covers the network layer (single-flight refresh, connectivity
+short-circuit, typed error mapping), the auth repository, and the login screen.
+CI runs format, analyze and test as a `verify` job that must pass **before**
+the APK build or any release runs.
 
 ---
 

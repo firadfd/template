@@ -1,6 +1,6 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'storage_keys.dart';
 
@@ -12,13 +12,15 @@ class StorageService extends GetxService {
 
   // ─── Theme ────────────────────────────────────────────────────────────────
 
-  Future<void> saveTheme(String theme) async => _box.write(StorageKeys.themeMode, theme);
+  Future<void> saveTheme(String theme) async =>
+      _box.write(StorageKeys.themeMode, theme);
 
   String? getTheme() => _box.read<String>(StorageKeys.themeMode);
 
   // ─── Language ─────────────────────────────────────────────────────────────
 
-  Future<void> saveLanguage(String lang) async => _box.write(StorageKeys.langCode, lang);
+  Future<void> saveLanguage(String lang) async =>
+      _box.write(StorageKeys.langCode, lang);
 
   String? getLanguage() => _box.read<String>(StorageKeys.langCode);
 
@@ -26,7 +28,8 @@ class StorageService extends GetxService {
 
   bool hasOnboarded() => _box.read<bool>(StorageKeys.hasOnboarded) ?? false;
 
-  Future<void> setOnboarded() async => _box.write(StorageKeys.hasOnboarded, true);
+  Future<void> setOnboarded() async =>
+      _box.write(StorageKeys.hasOnboarded, true);
 
   // ─── Auth Tokens ──────────────────────────────────────────────────────────
 
@@ -37,14 +40,20 @@ class StorageService extends GetxService {
   }) async {
     await _secureBox.write(key: StorageKeys.accessToken, value: accessToken);
     await _secureBox.write(key: StorageKeys.refreshToken, value: refreshToken);
-    
-    final expiryTime = DateTime.now().millisecondsSinceEpoch + (expiresIn * 1000);
-    await _box.write(StorageKeys.tokenExpiry, expiryTime); // Expiry isn't sensitive
+
+    final expiryTime =
+        DateTime.now().millisecondsSinceEpoch + (expiresIn * 1000);
+    await _box.write(
+      StorageKeys.tokenExpiry,
+      expiryTime,
+    ); // Expiry isn't sensitive
   }
 
-  Future<String?> getAccessToken() => _secureBox.read(key: StorageKeys.accessToken);
+  Future<String?> getAccessToken() =>
+      _secureBox.read(key: StorageKeys.accessToken);
 
-  Future<String?> getRefreshToken() => _secureBox.read(key: StorageKeys.refreshToken);
+  Future<String?> getRefreshToken() =>
+      _secureBox.read(key: StorageKeys.refreshToken);
 
   bool isAccessTokenExpired() {
     final expiry = _box.read<int>(StorageKeys.tokenExpiry);

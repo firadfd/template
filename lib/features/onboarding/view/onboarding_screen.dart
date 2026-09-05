@@ -13,7 +13,11 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<OnboardingController>();
-    final maxWidth = getValue<double>(mobile: double.infinity, tablet: 480, desktop: 560);
+    final maxWidth = getValue<double>(
+      mobile: double.infinity,
+      tablet: 480,
+      desktop: 560,
+    );
 
     return Scaffold(
       backgroundColor: context.appColors.background,

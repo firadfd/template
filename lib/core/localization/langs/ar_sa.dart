@@ -9,7 +9,8 @@ const Map<String, String> arSA = {
 
   // Onboarding
   'onboarding_welcome': 'مرحباً بك في قالب فلاتر',
-  'onboarding_desc': 'المجموعة الأساسية النهائية للتطبيقات عالية الأداء. ابنِ أسرع، وتوسع أكثر.',
+  'onboarding_desc':
+      'المجموعة الأساسية النهائية للتطبيقات عالية الأداء. ابنِ أسرع، وتوسع أكثر.',
   'get_started': 'ابدأ الآن',
 
   // Login
@@ -18,7 +19,7 @@ const Map<String, String> arSA = {
   'email_hint': 'البريد الإلكتروني',
   'password_hint': 'كلمة المرور',
   'login': 'تسجيل الدخول',
-  'no_account': "جديد هنا؟",
+  'no_account': 'جديد هنا؟',
   'sign_up': 'إنشاء حساب',
   'login_error': 'فشل المصادقة',
   'fill_fields': 'يرجى تقديم جميع المعلومات المطلوبة',
